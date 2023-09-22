@@ -77,12 +77,6 @@ export default function Sidebar() {
     navigate(to)
   }
 
-  const OwnBetNav = {
-    Icon: AccountTreeIcon,
-    title: 'Mein Tipp',
-    path: `/bet/${user?.id}`,
-    exact: true,
-  }
 
   return (
     <Drawer variant="permanent" anchor="left" open={open} onClose={() => setOpen(false)}>
@@ -108,7 +102,7 @@ export default function Sidebar() {
         ))}
         {user && (
           <div>
-            {[OwnBetNav, ...authenticatedNavItems].map(({ path, exact, Icon, title }) => (
+            {authenticatedNavItems.map(({ path, exact, Icon, title }) => (
               <ListItem key={path} onClick={(e) => onClick(e, path)}>
                 <ListItemIcon>
                   <Icon

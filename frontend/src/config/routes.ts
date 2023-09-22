@@ -19,9 +19,6 @@ export const adminRoutes: Route[] = [
 ]
 
 export const authenticatedRoutes: Route[] = [
-]
-
-export const publicRoutes: Route[] = [
   {
     component: asyncComponentLoader(() => import('@/pages/Dashboard')),
     path: '/',
@@ -29,10 +26,28 @@ export const publicRoutes: Route[] = [
     title: 'Startseite',
     Icon: HomeIcon,
   },
+]
+
+export const publicRoutes: Route[] = [
   {
     component: asyncComponentLoader(() => import('@/pages/auth/LoginPage')),
     path: '/login',
     title: 'Konfetti',
+  },
+  {
+    component: asyncComponentLoader(() => import('@/pages/auth/RegisterPage')),
+    path: '/register',
+    title: 'Konfetti',
+  },
+  {
+    component: asyncComponentLoader(() => import('@/pages/auth/ResetPasswordPage')),
+    path: '/resetPassword',
+    title: 'Passwort zurücksetzen',
+  },
+  {
+    component: asyncComponentLoader(() => import('@/pages/auth/ConfirmMailPage')),
+    path: '/verifyEmail',
+    title: 'E-Mail bestätigen',
   },
   {
     component: asyncComponentLoader(() => import('@/pages/AccessDenied')),

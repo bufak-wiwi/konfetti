@@ -107,12 +107,6 @@ export default function ProfileButton() {
           Darkmode
           <Switch checked={!!darkMode} />
         </MenuItem>
-        <MenuItem onClick={() => navigate(`/bet/${user.id}`)}>
-          <ListItemIcon>
-            <AccountTree fontSize="small" />
-          </ListItemIcon>
-          Mein Tipp
-        </MenuItem>
         <Divider />
         <MenuItem onClick={logout}>
           <ListItemIcon>
