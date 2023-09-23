@@ -41,7 +41,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, os.getenv("PWD_SECRET"), algorithm="HS256")
+    encoded_jwt = jwt.encode(to_encode, os.getenv("JWT_SECRET"), algorithm="HS256")
     return encoded_jwt
 
 
@@ -52,7 +52,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, os.getenv("PWD_SECRET"), algorithms=["HS256"])
+        payload = jwt.decode(token, os.getenv("JWT_SECRET"), algorithms=["HS256"])
         userId: str = payload.get("sub")
         user_permissions: dict = payload.get("permissions")
         if userId is None:

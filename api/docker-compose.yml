@@ -20,7 +20,7 @@ services:
             - DB_PASSWORD=admin
             - APP_NAME=konfetti
             - APP_VERSION=v0.9
-            - PWD_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d
+            - JWT_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d
     database:
         image: mariadb
         container_name: beckProfileDatabase
