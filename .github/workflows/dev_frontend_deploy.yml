@@ -44,5 +44,6 @@ jobs:
           username: ${{ secrets.DEV_USERNAME }}
           key: ${{ secrets.DEV_PRIVATE_KEY }}
           overwrite: true
+          strip_components: 2
           source: "frontend/dist/"
           target: "/var/www/konfetti/"

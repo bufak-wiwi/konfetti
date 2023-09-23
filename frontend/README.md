@@ -9,7 +9,7 @@ Important Frameworks used in this application:
 -   [tanstack/react-query](https://tanstack.com/query/v4/docs/vue/overview) which provides hooks for fetching, caching
     and updating asynchronous data in Vue
 -   [zustand](https://github.com/pmndrs/zustand) for complex stores
--   [jotai] for simple global state
+-   [jotai](https://jotai.org/) for simple global state
 -   [MUI](https://mui.com/material-ui/) as the design system
 
 ## Project setup
@@ -35,6 +35,8 @@ src
 +-- assets            # assets folder can contain all the static files such as images, fonts, etc.
 |
 +-- components        # shared components used across the entire application
+|
++-- config            # shared global configs
 |
 +-- features          # feature based modules
 |
