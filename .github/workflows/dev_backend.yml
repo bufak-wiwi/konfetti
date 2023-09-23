@@ -46,6 +46,8 @@ jobs:
         working-directory: ./api
         run: echo -e "APP_NAME=konfetti\nAPP_VERSION=v0.9\nDB_USER=${{secrets.DEV_DB_USERNAME}}\nDB_PASSWORD=${{secrets.DEV_DB_PASSWORD}}\nDB_SERVER=localhost\nDB_PORT=3306\nDB_DATABASE=${{secrets.DEV_DB_NAME}}\nPWD_SECRET=${{secrets.DEV_JWT_SECRET}}\n" > .env
 
+      - run: ls ./api/env_fastapi_311/lib/python3.11/site-packages
+
       - name: copy files via ssh password
         uses: appleboy/scp-action@master
         with:
