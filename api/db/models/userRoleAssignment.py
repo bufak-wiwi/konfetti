@@ -3,8 +3,8 @@ from sqlalchemy.orm import relationship
 from db.base import Base
 
 class UserRoleAssignment(Base):
-    userId = Column(Integer, ForeignKey('user.id'), nullable=False)
-    roleId = Column(Integer, ForeignKey('role.id'), nullable=False)
+    userId = Column(Integer, ForeignKey('user.id'), nullable=False, primary_key=True)
+    roleId = Column(Integer, ForeignKey('role.id'), nullable=False, primary_key=True)
     conferenceId = Column(Integer, ForeignKey('conference.id'), nullable=False, primary_key=True) #potential primary key issue because of duplicates
                                               
     user = relationship("user", backref="conferenceApplication")
