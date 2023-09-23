@@ -7,7 +7,7 @@ RUN apt install -y gcc python3-dev openssl libmariadb3 libmariadb-dev wget
 
 WORKDIR /usr/src/app
 
-COPY requirements.txt ./
+COPY api/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
