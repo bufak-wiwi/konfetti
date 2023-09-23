@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useNotifications } from '../../features/Feedback'
 import { useAuthentication } from '../../hooks/useAuthentication'

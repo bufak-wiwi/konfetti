@@ -1,10 +1,9 @@
 import { Box, Typography } from '@mui/material'
-import { messages } from '@/config'
 
 function LoaderErrorBoundaryFallback() {
   return (
     <Box>
-      <Typography variant="h5">{messages.loader.fail}</Typography>
+      <Typography variant="h5">Seite konnte nicht geladen werden</Typography>
     </Box>
   )
 }
