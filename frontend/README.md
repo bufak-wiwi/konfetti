@@ -13,11 +13,15 @@ Important Frameworks used in this application:
 -   [MUI](https://mui.com/material-ui/) as the design system
 
 ## Project setup
+
 Install dependencies using
+
 ```
 pnpm install
 ```
+
 Start the development server using
+
 ```
 pnpm run dev
 ```
@@ -73,7 +77,7 @@ src/features/AwesomeFeature
 |
 +-- utils       # utility functions for a specific feature
 |
-+-- index.js    # entry point for the feature, it should serve as the public API of the given feature and exports everything that should be used outside the feature
++-- index.ts    # entry point for the feature, it should serve as the public API of the given feature and exports everything that should be used outside the feature
 ```
 
 A feature folder could also contain other features (if used only within the parent feature) or be kept separated, it's a

@@ -9,15 +9,15 @@ const root = createRoot(container)
 const queryClient = new QueryClient()
 
 function render(App: ComponentType) {
-  root.render(
-    <StrictMode>
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
-              <App />
-          </QueryClientProvider>
-        </AuthProvider>
-    </StrictMode>,
-  )
+    root.render(
+        <StrictMode>
+            <AuthProvider>
+                <QueryClientProvider client={queryClient}>
+                    <App />
+                </QueryClientProvider>
+            </AuthProvider>
+        </StrictMode>
+    )
 }
 
 export default render
