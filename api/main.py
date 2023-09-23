@@ -13,7 +13,7 @@ from pathlib import Path
 from fastapi import FastAPI
 
 from db.session import engine 
-from db.models.base import Base
+from db.base import Base
 from endpoints.api import api_router
 
 load_dotenv()
