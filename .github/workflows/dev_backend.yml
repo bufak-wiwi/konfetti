@@ -20,26 +20,44 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      - name: Setup python
+        uses: actions/setup-python@v4
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          python-version: "3.11.5"
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      # - name: install db requirements
+      #   uses: ConorMacBride/install-package@v1
+      #   with:
+      #     apt: gcc libmariadb3 libmariadb-dev
+
+      # - name: Create venv
+      #   working-directory: ./api
+      #   run: python3 -m venv env_fastapi_311
+
+      # - name: Activate
+      #   working-directory: ./api
+      #   run: source env_fastapi_311/bin/activate
+
+      # - name: Install
+      #   working-directory: ./api
+      #   run: pip install -r requirements.txt
+
+      - name: Create Env
+        working-directory: ./api
+        run: echo -e "APP_NAME=konfetti\nAPP_VERSION=v0.9\nDB_USER=${{secrets.DEV_DB_USERNAME}}\nDB_PASSWORD=${{secrets.DEV_DB_PASSWORD}}\nDB_SERVER=localhost\nDB_PORT=3306\nDB_DATABASE=${{secrets.DEV_DB_NAME}}\nPWD_SECRET=${{secrets.DEV_JWT_SECRET}}\n" > .env
+
+      - name: copy files via ssh password
+        uses: appleboy/scp-action@master
         with:
-          context: api
-          push: true
-          tags: ${{ env.REGISTRY }}/bufak-wiwi/${{ env.IMAGE_NAME }}:latest
+          host: ${{ secrets.DEV_HOST }}
+          port: ${{ secrets.DEV_PORT }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_PRIVATE_KEY }}
+          overwrite: true
+          strip_components: 1
+          source: "api"
+          target: "/var/www/konfetti_api/"
 
-  deploy:
-    name: Deploy the latest Image
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -49,15 +67,14 @@ jobs:
           key: ${{ secrets.DEV_PRIVATE_KEY }}
           script: whoami
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create venv
+        working-directory: ./api
+        run: python3 -m venv env_fastapi_311
 
-      - name: Pull Image
-        run: docker pull ${{ env.REGISTRY }}/bufak-wiwi/${{ env.IMAGE_NAME }}:latest
+      - name: Activate
+        working-directory: ./api
+        run: source env_fastapi_311/bin/activate
 
-      - name: Start the Container
-        run: docker run --rm -p 8000:50443 --env DB_DATABASE=${{ env.DEV_DB_NAME }} --env DB_HOST=localhost --env DB_PORT=3306 --env DB_USER=${{ env.DEV_DB_USER }} --env DB_PASSWORD=${{ env.DEV_DB_PASSWORD }} --env APP_NAME=Konfetti --env APP_VERSION=v0.9 --env PWD_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d --name ${{ env.IMAGE_NAME }} ${{ env.REGISTRY }}/bufak-wiwi/${{ env.IMAGE_NAME }}:latest
+      - name: Install
+        working-directory: ./api
+        run: pip install -r requirements.txt
