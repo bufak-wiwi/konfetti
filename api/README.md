@@ -44,11 +44,19 @@ GRANT ALL PRIVILEGES ON konfetti.* TO 'admin'@'%';
 mariadb --user admin -padmin konfetti
 ```
 
-### Database migrations
+#### Database migrations
 
 To generate automatic migrationscript for the Database use alembic with the following
 
 ```sh
 alembic revision --autogenerate -m "first commit"
 alembic upgrade head
+```
+
+## Testing
+
+To run the Python unittests use the following, when you adhere to the conventions
+
+```sh
+python -m unittest discover
 ```

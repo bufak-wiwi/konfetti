@@ -14,6 +14,8 @@ from db.models.user import User
 from endpoints.schemas.user import ShowUser
 from endpoints.schemas.auth import TokenData
 
+load_dotenv()
+
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
