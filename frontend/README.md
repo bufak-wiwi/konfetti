@@ -1,4 +1,4 @@
-# GeoAce Frontend
+# Konfetti Frontend
 
 This is the react frontend for konfetti. This project is strongly inspired by
 [bulletproof-react](https://github.com/alan2207/bulletproof-react) and tries to replicate most parts of the project
@@ -13,9 +13,13 @@ Important Frameworks used in this application:
 -   [MUI](https://mui.com/material-ui/) as the design system
 
 ## Project setup
-
+Install dependencies using
 ```
 pnpm install
+```
+Start the development server using
+```
+pnpm run dev
 ```
 
 ### Automatically Format Code on File Save

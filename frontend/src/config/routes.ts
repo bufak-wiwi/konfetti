@@ -26,6 +26,11 @@ export const authenticatedRoutes: Route[] = [
         title: 'Startseite',
         Icon: HomeIcon,
     },
+    {
+        component: asyncComponentLoader(() => import('@/pages/UserDetails')),
+        path: '/user/:id',
+        title: 'Profil',
+      },
 ]
 
 export const publicRoutes: Route[] = [
