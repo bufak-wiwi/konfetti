@@ -5,6 +5,7 @@ import { api } from '@/api/api'
 import { useConfirm, useNotifications } from '@/features/Feedback'
 import { useAuthenticationStore } from '@/store/useAuthenticationStore'
 import { User } from '@/utils/types'
+import { DEFAULT_USER } from '@/utils/demo'
 
 interface CreateUser {
   email: string
@@ -60,7 +61,7 @@ const useProvideAuth = () => {
         addNotification({ message: 'Anmeldung erfolgreich', options: { variant: 'success' } })
       })
       .catch(() => {
-        setUser({ userName: "Peter", createdAt: "", email: "test@test.de", firstName:"Peter", id: 1, isAdmin: false, isEmailConfirmed: true, lastName: "peter", phone: ""})
+        setUser(DEFAULT_USER)
         addNotification({ message: 'Anmeldung fehlgeschlagen.', options: { variant: 'error' } })
       })
       .finally(() => setLoading(false))
