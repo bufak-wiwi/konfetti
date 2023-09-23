@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
-from typing import Annotated
+from typing import Annotated, List
 from fastapi import Depends, APIRouter, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError, jwt
@@ -9,9 +9,8 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
 
-from db.dao.user import get_user, get_user_for_login
+from db.dao.user import get_user, get_user_for_login, get_userpermission
 from db.models.user import User
-from endpoints.schemas.user import ShowUser
 from endpoints.schemas.auth import TokenData
 
 load_dotenv()
@@ -30,7 +29,7 @@ def authenticate(username: str, password: str):
     user = get_user_for_login(username)
     if not user:
         return False
-    if not verify_password(username, user.password):
+    if not verify_password(password, user.password):
         return False
     return user
 
@@ -55,18 +54,31 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
         payload = jwt.decode(token, os.getenv("PWD_SECRET"), algorithms=["HS256"])
         userId: str = payload.get("sub")
+        user_permissions: dict = payload.get("permissions")
         if userId is None:
             raise credentials_exception
-        token_data = TokenData(userId=userId)
+        token_data = TokenData(userId=userId, permissions=user_permissions)
     except JWTError:
         raise credentials_exception
     user: User = get_user(id=token_data.userId)
     if (user is None) or (user.status == "BLOCKED"):
         raise credentials_exception
-    return user
+    return token_data
+
+class PermissionChecker:
+    def __init__(self, permissions_required: List[str]):
+        self.permissions_required = permissions_required
+
+    def __call__(self, token_data: TokenData = Depends(get_current_user)):
+        for permission_required in self.permissions_required:
+            if permission_required not in [k for k, v in token_data.permissions.items() if v == True]:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Not enough permissions to access this resource")
+        return token_data
 
 
-@router.post("/login", response_model=ShowUser)
+@router.post("/login")
 def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     user = authenticate(form_data.username, form_data.password)
     if not user:
@@ -77,7 +89,7 @@ def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
         )
     access_token_expires = timedelta(minutes=30)
     access_token = create_access_token(
-        data={"sub": user.id}, expires_delta=access_token_expires
+        data={"sub": user.id, "permissions": get_userpermission(user.id)}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
