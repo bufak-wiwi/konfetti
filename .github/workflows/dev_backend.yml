@@ -25,6 +25,9 @@ jobs:
         with:
           python-version: "3.11.5"
 
+      - name: install db requirements
+        run: apt install -y gcc python3-dev openssl libmariadb3 libmariadb-dev wget
+
       - name: Create venv
         working-directory: ./api
         run: python3 -m venv env_fastapi_311
