@@ -39,7 +39,7 @@ jobs:
           context: api
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: latest
 
   deploy:
     name: Deploy the latest Image

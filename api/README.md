@@ -2,7 +2,7 @@
 
 ## Deployment
 
-To startup the API in an development environment use the following
+To startup the API in an development environment use the following:
 
 ```sh
 docker compose up
