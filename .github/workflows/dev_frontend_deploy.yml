@@ -44,5 +44,5 @@ jobs:
           password: ${{ secrets.DEV_PASSWORD }}
           port: ${{ secrets.DEV_PORT }}
           overwrite: true
-          source: "./frontend/dist/"
+          source: "frontend/dist/"
           target: "/var/www/konfetti/"
