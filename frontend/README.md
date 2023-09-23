@@ -40,7 +40,9 @@ src
 |
 +-- hooks             # shared hooks used across the entire application
 |
-+-- views             # views that will be accessible via routing
++-- store             # shared stores used across the entire application
+|
++-- pages             # views that will be accessible via routing
 |
 +-- utils             # shared utility functions
 ```
@@ -61,9 +63,9 @@ src/features/AwesomeFeature
 |
 +-- hooks       # hooks scoped to a specific feature
 |
-+-- utils       # utility functions for a specific feature
++-- store       # stores scoped to a specific feature
 |
-+-- views       # views that will be accessible via routing for a specific feature
++-- utils       # utility functions for a specific feature
 |
 +-- index.js    # entry point for the feature, it should serve as the public API of the given feature and exports everything that should be used outside the feature
 ```
