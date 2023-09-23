@@ -33,4 +33,4 @@ app = start_application()
 
 @app.get("/")
 async def root():
-    return {"message": f"Hello World!, The Application is up and running in current version: {os.getenv('APP_VERSION')}"}
+    return {"message": f"Hello World! We are here :), The Application is up and running in current version: {os.getenv('APP_VERSION')}"}
