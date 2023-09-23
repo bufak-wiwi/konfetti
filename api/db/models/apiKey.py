@@ -8,8 +8,8 @@ class ApiKey(Base):
     note = Column(String(255), nullable=False)
     createdOn = Column(Date, nullable=False)
     validUntil = Column(Date, nullable=True)
-    # conferenceId = Column(Integer, ForeignKey('conference.id'), nullable=False)
+    conferenceId = Column(Integer, ForeignKey('conference.id'), nullable=False)
 
 
-    # conference = relationship("conference", backref="apiKey")
+    conference = relationship("conference", backref="apiKey")
  
