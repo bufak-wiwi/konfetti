@@ -67,14 +67,8 @@ jobs:
           key: ${{ secrets.DEV_PRIVATE_KEY }}
           script: whoami
 
-      - name: Create venv
-        working-directory: ./api
-        run: python3 -m venv env_fastapi_311
+      - name: Create local venv
+        run: . /var/deployment/deployApi.sh
 
-      - name: Activate
-        working-directory: ./api
-        run: source env_fastapi_311/bin/activate
-
-      - name: Install
-        working-directory: ./api
-        run: pip install -r requirements.txt
+      - name: Restart service
+        run: sudo /bin/systemctl restart konfettiapi
