@@ -10,7 +10,7 @@ docker compose up
 
 ### Server
 
-To Setup the API in a python 3.11 Environment with the installed pip requirements from the `requirements.txt` run the following
+To Setup the API in a python 3.11 Environment with the installed pip requirements from the `requirements.txt` run the following:
 
 ```sh
 uvicorn main:app --reload
