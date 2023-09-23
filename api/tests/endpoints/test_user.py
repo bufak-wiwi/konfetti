@@ -9,7 +9,7 @@ load_dotenv()
 def encode_token(payload):
     return jwt.encode(
         payload=payload,
-        key=os.getenv("PWD_SECRET"),  # The private key created in the previous step
+        key=os.getenv("JWT_SECRET"),  # The private key created in the previous step
         algorithm="HS256",
     )
 
