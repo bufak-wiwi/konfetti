@@ -1,4 +1,4 @@
-# Conferencemanagementsystem
+# Konfetti Backend
 
 ## Deployment
 
