@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 
 class VotingQuestion(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    conferenceId = Column(Integer, ForeignKey('conference.id') nullable=False)
+    conferenceId = Column(Integer, ForeignKey('conference.id'), nullable=False)
     type = Column(String(255), nullable=False)
     questionText = Column(String(255), nullable=False)
     arrivedCouncilCount = Column(Integer, nullable=False)
