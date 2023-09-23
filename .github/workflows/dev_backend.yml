@@ -60,4 +60,4 @@ jobs:
         run: docker pull ${{ env.REGISTRY }}/bufak-wiwi/${{ env.IMAGE_NAME }}:latest
 
       - name: Start the Container
-        run: docker run --rm -p 8000:50443 --env DB_DATABASE=${{ env.DEV_DB_NAME }} --env DB_HOST=localhost --env DB_PORT=3306 --env DB_USER=${{ env.DEV_DB_USER }} --env DB_PASSWORD=${{ env.DEV_DB_PASSWORD }} --env APP_NAME=Konfetti --env APP_VERSION=v0.9 --env PWD_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d --name ${{ env.IMAGE_NAME }} bufakwiwi/${{ env.IMAGE_NAME }}
+        run: docker run --rm -p 8000:50443 --env DB_DATABASE=${{ env.DEV_DB_NAME }} --env DB_HOST=localhost --env DB_PORT=3306 --env DB_USER=${{ env.DEV_DB_USER }} --env DB_PASSWORD=${{ env.DEV_DB_PASSWORD }} --env APP_NAME=Konfetti --env APP_VERSION=v0.9 --env PWD_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d --name ${{ env.IMAGE_NAME }} bufak-wiwi/${{ env.IMAGE_NAME }}

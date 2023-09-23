@@ -27,7 +27,7 @@ Use `-it` if you wish to see the container running.
 
 ### Dev Database
 
-To Setup a development Environment and a Database create a Databse with the following specs
+To Setup a development Environment and a Database create a Databse with the following specs:
 
 ```sh
 docker run --name konfetti --env MARIADB_USER=admin --env MARIADB_PASSWORD=admin --env MARIADB_ROOT_PASSWORD=admin -p 3306:3306  mariadb:latest
