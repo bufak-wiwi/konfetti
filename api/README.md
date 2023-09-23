@@ -2,7 +2,7 @@
 
 ## Deployment
 
-To startup the API in an development environment use the following
+To startup the API in an development environment use the following:
 
 ```sh
 docker compose up
@@ -10,13 +10,13 @@ docker compose up
 
 ### Server
 
-To Setup the API in a python 3.11 Environment with the installed pip requirements from the `requirements.txt` run the following
+To Setup the API in a python 3.11 Environment with the installed pip requirements from the `requirements.txt` run the following:
 
 ```sh
 uvicorn main:app --reload
 ```
 
-To startup the server in an dockerenvironment use the following
+To startup the server in an dockerenvironment use the following:
 
 ```sh
 docker build -f Dockerfile . -t bufakwiwi/konfetti-fastapi
