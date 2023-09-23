@@ -6,7 +6,7 @@ class ConferenceApplication(Base):
     conferenceId = Column(Integer, ForeignKey('conference.id'), nullable=False)
     timestamp = Column(DateTime, nullable=False)
     priority = Column(Integer, nullable=False)
-    sensibleId = Column(Integer, ForeignKey('sensible.id'), nullable=True, )
+    sensibleId = Column(Integer, ForeignKey('sensible.id'), nullable=True)
     councilId = Column(Integer, ForeignKey('council.id'), nullable=False)
     status = Column(String(255), nullable=False)
     isAllowedToVote = Column(Boolean, nullable=False)
