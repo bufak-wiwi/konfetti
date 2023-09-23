@@ -53,12 +53,12 @@ export default function ProfileButton() {
 
     return (
         <React.Fragment>
-            {user.firstName} {user.lastName}
+            {user.firstname} {user.lastname}
             <Tooltip title="Kontoeinstellungen">
                 <IconButton size="large" color="inherit" onClick={handleClick}>
                     <Avatar
                         sx={{ backgroundColor: 'primary', width: 40, height: 40 }}
-                        alt={user.firstName || undefined}
+                        alt={user.firstname || undefined}
                     />
                 </IconButton>
             </Tooltip>
@@ -97,9 +97,9 @@ export default function ProfileButton() {
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
                 <MenuItem onClick={() => navigate(`/user/${user.id}`)}>
-                    <Avatar sx={{ backgroundColor: 'secondary' }} alt={user.firstName || undefined} />
+                    <Avatar sx={{ backgroundColor: 'secondary' }} alt={user.firstname || undefined} />
                     <ListItemText>
-                        {user.firstName} {user.lastName}
+                        {user.firstname} {user.lastname}
                     </ListItemText>
                 </MenuItem>
                 <Divider />

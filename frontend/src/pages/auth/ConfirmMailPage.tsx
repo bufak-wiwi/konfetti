@@ -13,7 +13,7 @@ export default function ConfirmMailPage() {
     const userId = searchParams.get('userId')
 
     useEffect(() => {
-        if (user?.isEmailConfirmed && user.id === Number(userId)) {
+        if (user?.status === 'confirmed' && user.id === Number(userId)) {
             addNotification({
                 message: 'E-Mail Adresse wurde bereits bestätigt',
                 options: { variant: 'success' },
