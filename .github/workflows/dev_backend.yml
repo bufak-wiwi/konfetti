@@ -25,22 +25,22 @@ jobs:
         with:
           python-version: "3.11.5"
 
-      - name: install db requirements
-        uses: ConorMacBride/install-package@v1
-        with:
-          apt: gcc libmariadb3 libmariadb-dev
+      # - name: install db requirements
+      #   uses: ConorMacBride/install-package@v1
+      #   with:
+      #     apt: gcc libmariadb3 libmariadb-dev
 
-      - name: Create venv
-        working-directory: ./api
-        run: python3 -m venv env_fastapi_311
+      # - name: Create venv
+      #   working-directory: ./api
+      #   run: python3 -m venv env_fastapi_311
 
-      - name: Activate
-        working-directory: ./api
-        run: source env_fastapi_311/bin/activate
+      # - name: Activate
+      #   working-directory: ./api
+      #   run: source env_fastapi_311/bin/activate
 
-      - name: Install
-        working-directory: ./api
-        run: pip install -r requirements.txt
+      # - name: Install
+      #   working-directory: ./api
+      #   run: pip install -r requirements.txt
 
       - name: Create Env
         working-directory: ./api
