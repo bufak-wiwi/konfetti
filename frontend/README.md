@@ -13,9 +13,13 @@ Important Frameworks used in this application:
 -   [MUI](https://mui.com/material-ui/) as the design system
 
 ## Project setup
-
+Install dependencies using
 ```
 pnpm install
+```
+Start the development server using
+```
+pnpm run dev
 ```
 
 ### Automatically Format Code on File Save

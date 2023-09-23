@@ -8,52 +8,29 @@ on:
         - frontend/**
 
 jobs:
-  files-changed:
-    name: detect what files changed
+  build:
+    name: Build and Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 3
-    outputs:
-      frontend: ${{ steps.changes.outputs.frontend }}
-      backend: ${{ steps.changes.outputs.backend }}
-    
-    steps:
-      - name: Check changes
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            frontend:
-              - 'frontend/**'
-            backend:
-              - 'backend/**'
-    
-  frontend:
-    name: Lint and Build Frontend
-    runs-on: ubuntu-latest
-
-    # only run this when frontend files changed
-    if: needs.files-changed.outputs.frontend == 'true'
-    needs: files-changed
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-      
+
       - name: Setup Node
         uses: pnpm/action-setup@v2
         with:
           version: 8
 
-      - name: Install Dependencies Frontend
+      - name: Install Dependencies
         working-directory: ./frontend
         run: |
           pnpm install
 
-      - name: Lint Frontend
+      - name: Lint
         working-directory: ./frontend
         run: |
           pnpm run lint
-
+      
       - name: Build Application
         working-directory: ./frontend
         run: |
