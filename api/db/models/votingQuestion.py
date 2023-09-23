@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, JSON
+from db.models.base import Base
 
 class VotingQuestion(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)

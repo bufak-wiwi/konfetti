@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean
+from db.models.base import Base
+
 
 class ApplicationCode(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)

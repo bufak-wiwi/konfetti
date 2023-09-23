@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, JSON
+from db.models.base import Base
+
 
 class Conference(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)

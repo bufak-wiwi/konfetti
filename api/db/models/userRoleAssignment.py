@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer
+from db.models.base import Base
 
 class UserRoleAssignment(Base):
     userId = Column(Integer, nullable=False)
