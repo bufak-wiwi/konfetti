@@ -16,7 +16,7 @@ To Setup the API in a python 3.11 Environment with the installed pip requirement
 uvicorn main:app --reload
 ```
 
-To startup the server in an dockerenvironment use the following
+To startup the server in an dockerenvironment use the following:
 
 ```sh
 docker build -f Dockerfile . -t bufakwiwi/konfetti-fastapi

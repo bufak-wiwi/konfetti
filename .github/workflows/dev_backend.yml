@@ -31,7 +31,7 @@ jobs:
 
       - name: Activate
         working-directory: ./api
-        run: source env_fastapi_311\bin\activate
+        run: source env_fastapi_311/bin/activate
 
       - name: Install
         working-directory: ./api
