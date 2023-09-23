@@ -1,0 +1,60 @@
+name: Dev Deploy Backend
+on:
+  push:
+    branches:
+      - develop
+      - 1-set-up-the-development-environmentsetu
+    paths:
+      - backend/**
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: konfetti_backend
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: backend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    name: Deploy the latest Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          port: ${{ secrets.DEV_PORT }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_PRIVATE_KEY }}
+          script: whoami
+
+      - name: Pull Image
+        run: docker pull ghcr.io/bufak-wiwi/${{ env.IMAGE_NAME }}:latest
+
+      - name: Start the Container
+        run: docker run --rm -p 8000:50443 --env DB_DATABASE=${{ env.DEV_DB_NAME }} --env DB_HOST=localhost --env DB_PORT=3306 --env DB_USER=${{ env.DEV_DB_USER }} --env DB_PASSWORD=${{ env.DEV_DB_PASSWORD }} --env APP_NAME=Konfetti --env APP_VERSION=v0.9 --env PWD_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d --name ${{ env.IMAGE_NAME }} bufakwiwi/${{ env.IMAGE_NAME }}
