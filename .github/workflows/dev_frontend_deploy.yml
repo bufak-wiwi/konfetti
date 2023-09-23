@@ -3,6 +3,7 @@ on:
   push:
     branches:
         - develop
+        - 1-set-up-the-development-environmentsetu
     paths:
         - frontend/**
 

@@ -1,8 +1,3 @@
-import {  useState } from 'react'
-import { Link as NavLink, Navigate, useLocation } from 'react-router-dom'
-import LoadingButton from '@mui/lab/LoadingButton'
-import { Divider, Grid, Link, Paper, Typography } from '@mui/material'
-import { Box, Stack } from '@mui/system'
 import {
   EmailInput,
   PasswordInput,
@@ -12,7 +7,11 @@ import {
 } from '@/features/Input'
 import { useAuthentication } from '@/hooks/useAuthentication'
 import { LocationState } from '@/utils/types'
-import logo from '@/assets/logo_full_white.png'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { Divider, Grid, Link, Paper, Typography } from '@mui/material'
+import { Box, Stack } from '@mui/system'
+import { useState } from 'react'
+import { Link as NavLink, Navigate, useLocation } from 'react-router-dom'
 
 export default function LoginPage() {
   const { loading, user, register } = useAuthentication()
@@ -52,7 +51,7 @@ export default function LoginPage() {
         <Paper sx={{ padding: 2 }}>
           <Stack spacing={1}>
             <Grid container justifyContent="center">
-            <img src={logo} alt="Konfetti" style={{ width: "100%" }} />
+            <img src="/logo.svg" alt="Konfetti" style={{ height: 150 }} />
             </Grid>
             <TextInput
               value={state.firstName}
