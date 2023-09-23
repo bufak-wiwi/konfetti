@@ -1,4 +1,4 @@
-# GeoAce Frontend
+# Konfetti Frontend
 
 This is the react frontend for konfetti. This project is strongly inspired by
 [bulletproof-react](https://github.com/alan2207/bulletproof-react) and tries to replicate most parts of the project
