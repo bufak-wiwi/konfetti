@@ -12,9 +12,9 @@ DB_USER : str = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_SERVER : str = os.getenv("DB_SERVER")
 DB_PORT : str = os.getenv("DB_PORT")
-DB_DB : str = os.getenv("DB_DB")
+DB_DATABASE : str = os.getenv("DB_DATABASE")
 
-DATABASE_URL = f"mariadb+mariadbconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}:{DB_PORT}/{DB_DB}"
+DATABASE_URL = f"mariadb+mariadbconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}:{DB_PORT}/{DB_DATABASE}"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False,autoflush=False,bind=engine)
