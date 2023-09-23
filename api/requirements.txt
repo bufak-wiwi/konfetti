@@ -5,3 +5,5 @@ mariadb
 python-dotenv
 pydantic[email]
 alembic
+python-jose[cryptography]
+passlib[bcrypt]
