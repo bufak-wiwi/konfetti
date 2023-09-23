@@ -60,7 +60,7 @@ const useProvideAuth = () => {
         addNotification({ message: 'Anmeldung erfolgreich', options: { variant: 'success' } })
       })
       .catch(() => {
-        setUser({ userName: "Peter", createdAt: "", email: "test@test.de", firstName:"Peter", id: 1, isAdmin: false, isEmailConfirmed: true, lastName: "peter", phone: "", updatedAt: ""})
+        setUser({ userName: "Peter", createdAt: "", email: "test@test.de", firstName:"Peter", id: 1, isAdmin: false, isEmailConfirmed: true, lastName: "peter", phone: ""})
         addNotification({ message: 'Anmeldung fehlgeschlagen.', options: { variant: 'error' } })
       })
       .finally(() => setLoading(false))

@@ -15,7 +15,6 @@ export interface User {
     isAdmin: boolean
     isEmailConfirmed: boolean
     createdAt: string
-    updatedAt: string
 }
 
 export interface LocationState {
