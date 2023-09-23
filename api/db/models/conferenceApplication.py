@@ -10,7 +10,7 @@ class ConferenceApplication(Base):
     councilId = Column(Integer, ForeignKey('council.id'), nullable=False)
     status = Column(String(255), nullable=False)
     isAllowedToVote = Column(Boolean, nullable=False)
-    typeId = Column(Integer, ForeignKey('applicationType.id')nullable=False)
+    typeId = Column(Integer, ForeignKey('applicationType.id'), nullable=False)
 
     user = relationship("user", backref="conferenceApplication")
     conference = relationship("conference", backref="conferenceApplication")
