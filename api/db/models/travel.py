@@ -11,7 +11,7 @@ class Travel(Base):
     arrivalTimestamp = Column(DateTime, nullable=False)
     arrivalPlace = Column(String(255), nullable=False)
     departureTimestamp = Column(DateTime, nullable=False)
-    note = Column(String(255), nullable=False)
+    note = Column(String(255), nullable=True)
 
     user = relationship("user", backref="travel")
     conference = relationship("conference", backref="travel")
