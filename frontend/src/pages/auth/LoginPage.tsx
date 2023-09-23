@@ -1,20 +1,19 @@
-import logo from '@/assets/logo_full_white.png'
 import { EmailInput, PasswordInput, isValidEmail, isValidPassword } from '@/features/Input'
 import { useAuthentication } from '@/hooks/useAuthentication'
 import { LocationState } from '@/utils/types'
 import LoadingButton from '@mui/lab/LoadingButton'
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Divider,
-  Grid,
-  Link,
-  Paper,
-  Typography,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
+    Grid,
+    Link,
+    Paper,
+    Typography,
 } from '@mui/material'
 import { Box, Stack } from '@mui/system'
 import { useState } from 'react'
@@ -76,7 +75,7 @@ export default function LoginPage() {
                 <Paper sx={{ padding: 2 }}>
                     <Stack spacing={1}>
                         <Grid container justifyContent="center">
-                            <img src={logo} alt="Konfetti" style={{ width: "100%" }} />
+                            <img src="/logo.svg" alt="Konfetti" style={{ height: 150 }} />
                         </Grid>
                         <EmailInput email={state.email} setEmail={(email) => setState({ ...state, email })} autoFocus />
                         <PasswordInput
