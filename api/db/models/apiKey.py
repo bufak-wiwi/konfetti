@@ -10,7 +10,7 @@ class ApiKey(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     """"hash of the api key"""
     apiKey = Column(String(255), nullable=False)
-    note = Column(String(255), nullable=False)
+    note = Column(String(255), nullable=True)
     createdOn = Column(Date, nullable=False)
     validUntil = Column(Date, nullable=True)
     userId = Column(Integer, ForeignKey('user.id'), nullable=False)
