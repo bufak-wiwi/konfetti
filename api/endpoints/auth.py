@@ -5,15 +5,18 @@ from typing import Annotated
 from fastapi import Depends, APIRouter, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError, jwt
+from fastapi.security import OAuth2PasswordBearer
+from passlib.context import CryptContext
 
 
 from db.dao.user import get_user, get_user_for_login
 from db.models.user import User
 from endpoints.schemas.user import ShowUser
 from endpoints.schemas.auth import TokenData
-from main import pwd_context, oauth2_scheme
 
 router = APIRouter()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
