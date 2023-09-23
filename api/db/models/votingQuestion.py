@@ -1,9 +1,10 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, JSON
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, JSON, ForeignKey
 from db.base import Base
+from sqlalchemy.orm import relationship
 
 class VotingQuestion(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    conferenceId = Column(Integer, nullable=False)
+    conferenceId = Column(Integer, ForeignKey('conference.id') nullable=False)
     type = Column(String(255), nullable=False)
     questionText = Column(String(255), nullable=False)
     arrivedCouncilCount = Column(Integer, nullable=False)
@@ -13,3 +14,5 @@ class VotingQuestion(Base):
     votingOptions = Column(JSON, nullable=False)
     votes = Column(JSON, nullable=False)
     result = Column(String(255), nullable=False)
+
+    conference = relationship("conference", backref="votingquestion")
