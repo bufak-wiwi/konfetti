@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { AccountTree, DarkMode, LightMode, Logout } from '@mui/icons-material'
+import { DarkMode, LightMode, Logout } from '@mui/icons-material'
 import {
   Avatar,
   Button,
