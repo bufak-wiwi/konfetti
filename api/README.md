@@ -23,7 +23,7 @@ docker build -f Dockerfile . -t bufakwiwi/konfetti-fastapi
 docker run --rm -p 8000:50443 --network=host --env DB_DATABASE=konfetti --env DB_SERVER=127.0.0.1 --env DB_PORT=3306 --env DB_USER=admin --env DB_PASSWORD=admin --env APP_NAME=konfetti --env APP_VERSION=v0.9 --env PWD_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d --name konfettiFastAPI bufakwiwi/konfetti-fastapi
 ```
 
-Use `-it` if you wish to see the container running.
+Use `-it` if you wish to see the container running
 
 ### Dev Database
 
