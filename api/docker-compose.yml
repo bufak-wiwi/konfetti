@@ -32,6 +32,7 @@ services:
         ports:
             - '3306:3306'
         volumes:
+            - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql
             - db_data:/var/lib/mariadb
 volumes:
     db_data:

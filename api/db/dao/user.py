@@ -15,5 +15,14 @@ def get_user_for_login(email: str, db: Session = Depends(get_db)):
 
     return userSecret
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(User).offset(skip).limit(limit).all()
+def get_userpermission(id: int):
+    permission_dict = {
+        "USER": True,
+        "ADMIN": False,
+        "COUNCIL": False,
+    }
+    # ToDo find all permissions
+    return permission_dict
+
+def get_users(db: Session):
+    return list(db.query(User).all())

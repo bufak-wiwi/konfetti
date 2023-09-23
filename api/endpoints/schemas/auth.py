@@ -8,5 +8,4 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     userId: int
-    email: str | None = None
-    role: int
+    permissions: dict
