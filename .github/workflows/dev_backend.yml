@@ -65,10 +65,4 @@ jobs:
           port: ${{ secrets.DEV_PORT }}
           username: ${{ secrets.DEV_USERNAME }}
           key: ${{ secrets.DEV_PRIVATE_KEY }}
-          script: whoami
-
-      - name: Create local venv
-        run: . /var/deployment/deployApi.sh
-
-      - name: Restart service
-        run: sudo /bin/systemctl restart konfettiapi
+          script: . /var/deployment/deployApi.sh
