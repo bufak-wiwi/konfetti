@@ -1,6 +1,6 @@
 from sqlalchemy import String, Integer, Column
-from sqlalchemy import Base
+from db.base import Base
 
 class ApplicationType(Base):
-    id = Column(Integer, autoincrement=True, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)

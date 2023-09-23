@@ -19,7 +19,7 @@ from typing import Annotated
 from fastapi import Depends
 
 from db.session import engine 
-from db.models.base import Base
+from db.base import Base
 from endpoints.api import api_router
 from db.dao.user import get_current_user
 

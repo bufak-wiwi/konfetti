@@ -1,8 +1,8 @@
 from sqlalchemy import String, Integer, Column, JSON
-from sqlalchemy import Base
+from db.base import Base
 
-class ApplicationType(Base):
-    id = Column(Integer, autoincrement=True, primary_key=True)
+class Sensible(Base):
+    id = Column(Integer, primary_key=True, autoincrement=True)
     sex = Column(String(255), nullable=False)
     street = Column(String(255), nullable=False)
     zip = Column(Integer, nullable=False)

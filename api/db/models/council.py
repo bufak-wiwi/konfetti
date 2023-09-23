@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean
-from db.models.base import Base
+from db.base import Base
 
 class Council(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
