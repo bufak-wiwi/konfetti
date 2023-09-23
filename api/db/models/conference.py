@@ -12,5 +12,5 @@ class Conference(Base):
     conferenceApplicationPhase = Column(JSON, nullable=False)
     workshopApplicationPhase = Column(JSON, nullable=False)
     workshopSuggestionPhase = Column(JSON, nullable=False)
-    texte = Column(JSON, nullable=False)
+    texts = Column(JSON, nullable=False)
     dropdowns = Column(JSON, nullable=False)
