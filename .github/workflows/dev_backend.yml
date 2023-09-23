@@ -5,7 +5,7 @@ on:
       - develop
       - 1-set-up-the-development-environmentsetu
     paths:
-      - backend/**
+      - api/**
 
 env:
   REGISTRY: ghcr.io
