@@ -4,3 +4,4 @@ SQLAlchemy
 mariadb 
 python-dotenv
 pydantic[email]
+alembic

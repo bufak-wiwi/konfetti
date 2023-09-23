@@ -28,3 +28,12 @@ GRANT ALL PRIVILEGES ON konfetti.* TO 'admin'@'%';
 ```sh
 mariadb --user admin -padmin konfetti
 ```
+
+### Database migrations
+
+To generate automatic migrationscript for the Database use alembic with the following
+
+```sh
+alembic revision --autogenerate -m "first commit"
+alembic upgrade head
+```
