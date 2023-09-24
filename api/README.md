@@ -4,16 +4,19 @@ Intro
 
 **Most important technology in use:**
 
--   FastAPI # for the api
--   SQLArlchemy # for the databaseconnection
--   PyDantic # for dealing with JSON on endpoints
+- FastAPI # for the api
+- SQLArlchemy # for the databaseconnection
+- PyDantic # for dealing with JSON on endpoints
 
 ## Project Setup
 
 ### Prerequisites
 
--   Python 3.11
--   `python -m pip install -r requirements.txt`
+- Python 3.11
+- `python -m pip install -r requirements.txt`
+- on mac/unix/linux:
+  - brew install gcc
+  - brew install mariadb-connector-c
 
 ### Local
 
