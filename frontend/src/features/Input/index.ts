@@ -1,5 +1,6 @@
 export * from './utils/validation'
 export * from './components/EmailInput'
+export * from './components/DateInput'
 export * from './components/PasswordInput'
 export * from './components/TextInput'
 export * from './components/SelectInput'
