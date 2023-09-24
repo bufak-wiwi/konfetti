@@ -50,13 +50,15 @@ const useProvideAuth = () => {
 
     const login = async (email: string, password: string) => {
         setLoading(true)
-        api.post<User>('/user/login', { email, password })
+        const data = new FormData()
+        data.append('email', email)
+        data.append('password', password)
+        api.post<User>('/login', data)
             .then((result) => {
                 setUser(result.data)
                 addNotification({ message: 'Anmeldung erfolgreich', options: { variant: 'success' } })
             })
             .catch(() => {
-                setUser(DEFAULT_USER)
                 addNotification({ message: 'Anmeldung fehlgeschlagen.', options: { variant: 'error' } })
             })
             .finally(() => setLoading(false))
@@ -67,7 +69,7 @@ const useProvideAuth = () => {
         confirmDialog(
             'Willst du dich wirklich abmelden?',
             () => {
-                api.post('/user/logout')
+                api.post('/logout')
                     .then(() =>
                         addNotification({
                             message: 'Abmeldung erfolgreich',
