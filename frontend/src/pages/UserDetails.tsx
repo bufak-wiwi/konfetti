@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
-import { Navigate, useParams } from 'react-router-dom'
 import { useUpdateUser, useUser } from '@/api'
 import PaperCard from '@/components/PaperCard'
-import { AlertCard, Loading, useConfirm, useNotifications } from '@/features/Feedback'
-import { EmailInput, TextInput } from '@/features/Input'
+import { AlertCard, Loading, useNotifications } from '@/features/Feedback'
+import { EmailInput, NumberInput, TextInput } from '@/features/Input'
+import DateInput from '@/features/Input/components/DateInput'
 import { useAuthentication } from '@/hooks/useAuthentication'
+import { useEffect, useState } from 'react'
+import { Navigate, useParams } from 'react-router-dom'
 
 export default function UserDetails() {
-    const confirm = useConfirm((state) => state.confirmDialog)
     const addNotification = useNotifications((state) => state.addNotification)
     const { user, isAdmin } = useAuthentication()
     const params = useParams()
@@ -27,28 +27,24 @@ export default function UserDetails() {
     }
 
     const onSave = () => {
+        // TODO: Validate user
         if (!userCopy) return
 
-        confirm(
-            `Soll der Benutzer ${userCopy.firstname} gespeichert werden? Dieser wird dabei von allen Geräten ausgeloggt.`,
-            () => {
-                mutateAsync(userCopy)
-                    .then(() => {
-                        addNotification({
-                            message: 'Der Benutzer wurde erfolgreich gespeichert.',
-                            options: { variant: 'success' },
-                        })
-                        setEditing(false)
-                    })
-                    .catch((err) => {
-                        console.log('Got err', err)
-                        addNotification({
-                            message: 'Der Benutzer konnte nicht gespeichert werden.',
-                            options: { variant: 'error' },
-                        })
-                    })
-            }
-        )
+        mutateAsync(userCopy)
+            .then(() => {
+                addNotification({
+                    message: 'Der Benutzer wurde erfolgreich gespeichert.',
+                    options: { variant: 'success' },
+                })
+                setEditing(false)
+            })
+            .catch((err) => {
+                console.log('Got err', err)
+                addNotification({
+                    message: 'Der Benutzer konnte nicht gespeichert werden.',
+                    options: { variant: 'error' },
+                })
+            })
     }
 
     if (user?.id != params.id && !isAdmin) {
@@ -71,19 +67,11 @@ export default function UserDetails() {
         <PaperCard
             title={`Profil von ${data?.firstname} ${data.lastname}`}
             editing={editing}
-            onEdit={isAdmin ? () => setEditing(true) : undefined}
+            onEdit={() => setEditing(true)}
             loading={isUpdateLoading}
             onSave={onSave}
             onEditCancel={onEditCancel}
         >
-            {!isAdmin && (
-                <AlertCard
-                    severity="info"
-                    dismissable
-                    title="Diese Seite ist noch in der Entwicklung"
-                    body="Die Seite ist noch nicht fertig und wird noch weiterentwickelt."
-                />
-            )}
             <TextInput
                 label="Vorname"
                 value={userCopy?.firstname}
@@ -96,10 +84,24 @@ export default function UserDetails() {
                 setValue={(lastname) => setUserCopy({ ...userCopy, lastname })}
                 disabled={!editing}
             />
-            <EmailInput
-                email={userCopy?.email}
-                setEmail={(email) => setUserCopy({ ...userCopy, email })}
+            <EmailInput email={userCopy?.email} setEmail={(email) => setUserCopy({ ...userCopy, email })} disabled />
+            <DateInput
+                label="Geburtstag"
+                value={userCopy?.birthday}
+                setValue={(birthday) => setUserCopy({ ...userCopy, birthday })}
                 disabled={!editing}
+            />
+            <NumberInput
+                label="Fachschaftsrat"
+                value={userCopy?.councilId}
+                setValue={(councilId) => setUserCopy({ ...userCopy, councilId })}
+                disabled={!editing}
+            />
+            <AlertCard
+                severity="info"
+                dismissable
+                title="Diese Seite ist noch in der Entwicklung"
+                body="Die Seite ist noch nicht fertig und wird noch weiterentwickelt."
             />
         </PaperCard>
     )

@@ -1,4 +1,7 @@
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import deLocale from 'date-fns/locale/de'
 import { ComponentType, StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { AuthProvider } from './hooks/useAuthentication'
@@ -13,7 +16,9 @@ function render(App: ComponentType) {
         <StrictMode>
             <AuthProvider>
                 <QueryClientProvider client={queryClient}>
-                    <App />
+                    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={deLocale}>
+                        <App />
+                    </LocalizationProvider>
                 </QueryClientProvider>
             </AuthProvider>
         </StrictMode>
