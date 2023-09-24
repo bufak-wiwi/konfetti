@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from typing import Annotated, List
-from fastapi import Depends, APIRouter, HTTPException, status
+from fastapi import Depends, APIRouter, HTTPException, status, responses
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
@@ -12,7 +12,7 @@ from passlib.context import CryptContext
 from db.dao.user import get_user, get_user_for_login, get_userpermission
 from db.models.user import User
 from endpoints.schemas.user import ShowUser
-from endpoints.schemas.auth import TokenData
+from endpoints.schemas.auth import TokenData, Token
 
 load_dotenv()
 
@@ -66,6 +66,17 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         raise credentials_exception
     return token_data
 
+def refresh_access_token(current_user: TokenData = Depends(get_current_user), expires_delta: timedelta | None = None):
+    token_data = current_user
+    to_encode = token_data.model_copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, os.getenv("JWT_SECRET"), algorithm="HS256")
+    return encoded_jwt
+
 class PermissionChecker:
     def __init__(self, permissions_required: List[str]):
         self.permissions_required = permissions_required
@@ -79,7 +90,7 @@ class PermissionChecker:
         return token_data
 
 
-@router.post("/login", response_class=ShowUser)
+@router.post("/login", response_model=ShowUser)
 def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     user = authenticate(form_data.username, form_data.password)
     if not user:
@@ -92,5 +103,8 @@ def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
     access_token = create_access_token(
         data={"sub": user.id, "permissions": get_userpermission(user.id)}, expires_delta=access_token_expires
     )
-    return user
+    # set access token to response cookie
+    response = responses.Response(user, status_code=200)
+    response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
+    return response
 

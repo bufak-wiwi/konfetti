@@ -1,18 +1,24 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, responses
 
 from db.dao.user import get_users
-from endpoints.auth import PermissionChecker, get_current_user
+from endpoints.auth import PermissionChecker, get_current_user, refresh_access_token
 from endpoints.schemas.auth import TokenData
 from endpoints.schemas.user import ShowUser, CreateUser, UpdateUser
 from endpoints.errorhandler import errorhandler
 
 router = APIRouter()
 
+# to refresh the token set the Response to
+# response.set_cookie(key="access_token", value=f"Bearer {refresh_access_token()}", httponly=True)
+
 @router.get("/", dependencies=[Depends(PermissionChecker(["USER"]))], response_model=List[ShowUser])
 def get_all():
     try:
-        return get_users()
+        all_users = get_users()
+        response = responses.Response(all_users)
+        response.set_cookie(key="access_token", value=f"Bearer {refresh_access_token()}", httponly=True)
+        return response
     except Exception as ex:
         errorhandler(ex)
     
