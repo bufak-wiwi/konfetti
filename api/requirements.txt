@@ -1,3 +1,6 @@
+black
+pylance
+pylint
 fastapi 
 uvicorn[standard]
 SQLAlchemy
