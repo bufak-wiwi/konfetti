@@ -11,6 +11,7 @@ from passlib.context import CryptContext
 
 from db.dao.user import get_user, get_user_for_login, get_userpermission
 from db.models.user import User
+from endpoints.schemas.user import ShowUser
 from endpoints.schemas.auth import TokenData
 
 load_dotenv()
@@ -26,12 +27,12 @@ def get_hash(password):
     return pwd_context.hash(password)
 
 def authenticate(username: str, password: str):
-    user = get_user_for_login(username)
-    if not user:
+    user_secrect = get_user_for_login(username)
+    if not user_secrect:
         return False
-    if not verify_password(password, user.password):
+    if not verify_password(password, user_secrect.password):
         return False
-    return user
+    return get_user(user_secrect.userId)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -78,7 +79,7 @@ class PermissionChecker:
         return token_data
 
 
-@router.post("/login")
+@router.post("/login", response_class=ShowUser)
 def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     user = authenticate(form_data.username, form_data.password)
     if not user:
@@ -91,5 +92,5 @@ def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
     access_token = create_access_token(
         data={"sub": user.id, "permissions": get_userpermission(user.id)}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return user
 
