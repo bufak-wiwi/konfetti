@@ -1,11 +1,10 @@
-import { ReactElement, createContext, useContext, useState } from 'react'
-import { AxiosError } from 'axios'
-import { SnackbarKey } from 'notistack'
 import { api } from '@/api/api'
 import { useConfirm, useNotifications } from '@/features/Feedback'
 import { useAuthenticationStore } from '@/store/useAuthenticationStore'
 import { User } from '@/utils/types'
-import { DEFAULT_USER } from '@/utils/demo'
+import { AxiosError } from 'axios'
+import { SnackbarKey } from 'notistack'
+import { ReactElement, createContext, useContext, useState } from 'react'
 
 interface CreateUser {
     email: string
