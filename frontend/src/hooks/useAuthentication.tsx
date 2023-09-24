@@ -50,7 +50,7 @@ const useProvideAuth = () => {
     const login = async (email: string, password: string) => {
         setLoading(true)
         const data = new FormData()
-        data.append('email', email)
+        data.append('username', email)
         data.append('password', password)
         api.post<User>('/login', data)
             .then((result) => {
