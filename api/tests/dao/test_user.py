@@ -1,4 +1,4 @@
-import pytest
+import unittest
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
@@ -19,38 +19,26 @@ url = URL.create(
 engine = create_engine(url)
 Session = sessionmaker(bind=engine)
 
-@pytest.fixture(scope="module")
-def db_session():
-    Base.metadata.create_all(engine)
-    session = Session()
-    yield session
-    session.rollback()
-    session.close()
+class TestUserDao(unittest.TestCase):
 
-@pytest.fixture(scope="module")
-def valid_data():
-    valid_data = User(
+    def setUp(self):
+        Base.metadata.create_all(engine)
+        session = Session()
+        yield session
+        session.rollback()
+        session.close()
+        valid_data = User(
         email="test@test.de"
     )
-    return valid_data
-
-class TestUserDao:
 
     def test_x(self):
-        # self.session.add(self.valid_data)
-        # self.session.commit()
-        # returnvalue = function(db=db_session)
-        # assert returnvalue.id == expected.id
+        # encode_token(get_mock_user_claims(permissions))
+        # self.assertEqual(function(a,b), expected)
         pass
 
-    # @pytest.mark.xfail(raises=IntegrityError)
-    def test_y(self, db_session):
-        # invalid_data = User(
-        #     email=1
-        # )
-        # db_session.add(invalid_data)
-        # try:
-        #     db_session.commit()
-        # except IntegrityError:
-        #     db_session.rollback()
+    def tearDown(self):
         pass
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -14,6 +14,7 @@ docker compose up
 To Setup the API in a python 3.11 Environment with the installed pip requirements from the `requirements.txt` run the following:
 
 ```sh
+python -m pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
@@ -21,7 +22,8 @@ To startup the server in an dockerenvironment use the following:
 
 ```sh
 docker build -f Dockerfile . -t bufakwiwi/konfetti-fastapi
-docker run --rm -p 8000:50443 --network=host --env DB_DATABASE=konfetti --env DB_SERVER=127.0.0.1 --env DB_PORT=3306 --env DB_USER=admin --env DB_PASSWORD=admin --env APP_NAME=konfetti --env APP_VERSION=v0.9 --env PWD_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d --name konfettiFastAPI bufakwiwi/konfetti-fastapi
+# -p 80:8000 does not work because of --network=host
+docker run --rm --network=host --env DB_DATABASE=konfetti --env DB_SERVER=host.docker.internal --env DB_PORT=3306 --env DB_USER=admin --env DB_PASSWORD=admin --env APP_NAME=konfetti --env APP_VERSION=v0.9 --env JWT_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d --name konfettiFastAPI bufakwiwi/konfetti-fastapi
 ```
 
 Use `-it` if you wish to see the container running
