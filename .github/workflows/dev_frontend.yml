@@ -1,0 +1,49 @@
+name: Dev Deploy Frontend
+on:
+  push:
+    branches:
+        - develop
+        - 1-set-up-the-development-environmentsetu
+    paths:
+        - frontend/**
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Dependencies
+        working-directory: ./frontend
+        run: |
+          pnpm install
+
+      - name: Lint
+        working-directory: ./frontend
+        run: |
+          pnpm run lint
+      
+      - name: Build Application
+        working-directory: ./frontend
+        run: |
+          pnpm run build
+        
+      - name: copy files via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          port: ${{ secrets.DEV_PORT }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_PRIVATE_KEY }}
+          overwrite: true
+          strip_components: 2
+          source: "frontend/dist/"
+          target: "/var/www/konfetti/"

@@ -1,0 +1,14 @@
+black
+pylance
+pylint
+fastapi 
+uvicorn[standard]
+SQLAlchemy
+mariadb 
+python-dotenv
+pydantic[email]
+alembic
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+pytest

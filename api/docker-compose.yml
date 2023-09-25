@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+    # BUG connection to database does not work: sqlalchemy.exc.OperationalError: (mariadb.OperationalError) Can't connect to local server through socket '/run/mysqld/mysqld.sock' (2)
+    server:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: bufakwiwi/konfetti-fastapi
+        container_name: konfettiFastAPI
+        ports:
+            - '80:8000'
+        depends_on:
+            - database
+        environment:
+            # default for local development environment
+            - DB_DATABASE=konfetti
+            - DB_HOST=database
+            - DB_PORT=3306
+            - DB_USER=admin
+            - DB_PASSWORD=admin
+            - APP_NAME=konfetti
+            - APP_VERSION=v0.9
+            - JWT_SECRET=9418175b967de68122e2cce3b7a02ac54f01d0d683b901dbec9bec4b097a236d
+    database:
+        image: mariadb
+        container_name: konfettiDB
+        environment:
+            MARIADB_ROOT_PASSWORD: password
+            MYSQL_DATABASE: konfetti
+            MARIADB_USER: admin
+            MARIADB_PASSWORD: admin
+        ports:
+            - '3306:3306'
+        volumes:
+            - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql
+            - db_data:/var/lib/mariadb
+volumes:
+    db_data:

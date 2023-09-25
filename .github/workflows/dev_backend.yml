@@ -1,0 +1,68 @@
+name: Dev Deploy API
+on:
+  push:
+    branches:
+      - develop
+      - 1-set-up-the-development-environmentsetu
+    paths:
+      - api/**
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: konfetti_api
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11.5"
+
+      # - name: install db requirements
+      #   uses: ConorMacBride/install-package@v1
+      #   with:
+      #     apt: gcc libmariadb3 libmariadb-dev
+
+      # - name: Create venv
+      #   working-directory: ./api
+      #   run: python3 -m venv env_fastapi_311
+
+      # - name: Activate
+      #   working-directory: ./api
+      #   run: source env_fastapi_311/bin/activate
+
+      # - name: Install
+      #   working-directory: ./api
+      #   run: pip install -r requirements.txt
+
+      - name: Create Env
+        working-directory: ./api
+        run: echo -e "APP_NAME=konfetti\nAPP_VERSION=v0.9\nDB_USER=${{secrets.DEV_DB_USERNAME}}\nDB_PASSWORD=${{secrets.DEV_DB_PASSWORD}}\nDB_SERVER=localhost\nDB_PORT=3306\nDB_DATABASE=${{secrets.DEV_DB_NAME}}\nPWD_SECRET=${{secrets.DEV_JWT_SECRET}}\n" > .env
+
+      - name: copy files via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          port: ${{ secrets.DEV_PORT }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_PRIVATE_KEY }}
+          overwrite: true
+          strip_components: 1
+          source: "api"
+          target: "/var/www/konfetti_api/"
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          port: ${{ secrets.DEV_PORT }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_PRIVATE_KEY }}
+          script: . /var/deployment/deployApi.sh
