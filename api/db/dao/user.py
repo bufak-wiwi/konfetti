@@ -7,6 +7,7 @@ from db.models.user import User
 from db.models.userSecret import UserSecret
 from db.models.userRoleAssignment import UserRoleAssignment
 from db.models.role import Role
+from db.models.council import Council
 
 
 def get_user(userId: int, db: Session = Depends(get_db)):
@@ -37,3 +38,6 @@ def get_userpermission(id: int, db: Session = Depends(get_db)):
 
 def get_users(db: Session):
     return list(db.query(User).all())
+
+def get_council_of_user(councilId: int, db: Session = Depends(get_db)):
+    return db.query(Council).filter(Council.id == councilId).first()
