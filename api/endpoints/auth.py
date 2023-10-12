@@ -18,7 +18,7 @@ load_dotenv()
 
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/login")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -90,7 +90,7 @@ class PermissionChecker:
         return token_data
 
 
-@router.post("/login", response_model=ShowUser)
+@router.post("/login") #, response_model=ShowUser
 def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     user = authenticate(form_data.username, form_data.password)
     if not user:
@@ -104,7 +104,8 @@ def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
         data={"sub": user.id, "permissions": get_userpermission(user.id)}, expires_delta=access_token_expires
     )
     # set access token to response cookie
-    response = responses.Response(user, status_code=200)
+    response = responses.Response()
+    response.body = {"access_token": access_token, "token_type": "bearer", **user} # outsmart swagger.io
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
     return response
 
