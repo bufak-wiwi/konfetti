@@ -1,5 +1,11 @@
 from fastapi import HTTPException, status
 
+
+"""Error handler
+
+Raises:
+    HTTPException: Different HTTPstatuscodes depending on the error
+"""
 def errorhandler(exception):
     exception_type = type(exception)
 

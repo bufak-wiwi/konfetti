@@ -8,17 +8,46 @@ from db.models.userSecret import UserSecret
 from db.models.userRoleAssignment import UserRoleAssignment
 from db.models.role import Role
 
+"""Databaseaccessobject to get a specific user
 
-def get_user(userId: int, db):
+Parameters:
+    userId (int): id of the user to return
+    db (Session): databaseconnection
+
+Returns:
+    User: requested user by id
+"""
+def get_user(userId: int, db: Session):
     return db.query(User).filter(User.id == userId).first()
 
-def get_user_for_login(email: str, db: Session = Depends(get_db)):
+"""Databaseaccessobject to get a specific user for login
+
+Parameters:
+    email (str): email of the user to return
+    db (Session): databaseconnection
+
+Returns:
+    User: requested usersecrets by email
+"""
+def get_user_for_login(email: str, db: Session):
     user = db.query(User).filter(User.email == email).first()
     userSecret = db.query(UserSecret).filter(UserSecret.userId == user.id).first()
 
     return userSecret
 
-def get_userpermission(id: int, db: Session = Depends(get_db)):
+"""Databaseaccessobject to get all permissions of a specific user
+lookup the user permission roles
+adds organizer role if user is organizer of one conference
+adds the id of each conference for which the user was/is organzier
+
+Parameters:
+    id (int): id of the user
+    db (Session): databaseconnection
+
+Returns:
+    dict: representation of the userpermissions
+"""
+def get_userpermission(id: int, db: Session):
     permission_dict = {
         "USER": True,
         "ADMIN": False,
@@ -35,6 +64,14 @@ def get_userpermission(id: int, db: Session = Depends(get_db)):
             permission_dict[roleAssingment.conferenceId] = True
     return permission_dict
 
+"""Databaseaccessobject to get all users
+
+Parameters:
+    db (Session): databaseconnection
+
+Returns:
+    List[User]: list of all users
+"""
 def get_users(db: Session):
     return list(db.query(User).all())
 
