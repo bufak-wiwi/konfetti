@@ -11,4 +11,4 @@ class UserSecret(Base):
     passwordToken = Column(String(255), nullable=False)
     passwordTokenValidUntil = Column(DateTime, nullable=False)
 
-    user = relationship("user", backref="userSecret")
+    user = relationship("User", backref="userSecret")

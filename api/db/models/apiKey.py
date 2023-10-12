@@ -16,5 +16,5 @@ class ApiKey(Base):
     userId = Column(Integer, ForeignKey('user.id'), nullable=False)
 
 
-    user = relationship("user", backref="apiKey")
+    user = relationship("User", backref="apiKey")
  

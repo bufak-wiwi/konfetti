@@ -8,5 +8,5 @@ class WorkshopAttendee(Base):
     isHost = Column(Boolean, nullable=False)
 
     
-    user = relationship("user", backref="workshopAttendee")
-    workshop = relationship("workshop", backref="workshopAttendee")
+    user = relationship("User", backref="workshopAttendee")
+    workshop = relationship("Workshop", backref="workshopAttendee")

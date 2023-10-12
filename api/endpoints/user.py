@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status, responses
 
-from db.dao.user import get_users
+from db.dao.user import get_users, create_user
 from endpoints.auth import PermissionChecker, get_current_user, refresh_access_token
 from endpoints.schemas.auth import TokenData
 from endpoints.schemas.user import ShowUser, CreateUser, UpdateUser
@@ -27,8 +27,12 @@ def get_user(id: int):
     pass
     
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_user(user2create: CreateUser):
-    pass
+def post_user(user2create: CreateUser):
+    try:
+        create_user(user2create)
+        print("user created")
+    except Exception as ex:
+        errorhandler(ex)
 
 @router.put("/{id}", dependencies=[Depends(PermissionChecker(["USER"]))])
 def update_user(user2update: UpdateUser, id: int, current_user: TokenData = Depends(get_current_user)):

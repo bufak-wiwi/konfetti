@@ -8,5 +8,5 @@ class WorkshopApplication(Base):
     priority = Column(Integer, nullable=False)
     isHost = Column(Boolean, nullable=False)
 
-    user = relationship("user", backref="workshopApplication")
-    workshop = relationship("workshop", backref="workshopApplication")
+    user = relationship("User", backref="workshopApplication")
+    workshop = relationship("Workshop", backref="workshopApplication")

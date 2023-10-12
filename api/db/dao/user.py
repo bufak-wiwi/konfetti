@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends
 from typing import List
 
-from db.session import get_db
+from db.session import engine, get_db
 from db.models.user import User
 from db.models.userSecret import UserSecret
 from db.models.userRoleAssignment import UserRoleAssignment
@@ -37,3 +37,17 @@ def get_userpermission(id: int, db: Session = Depends(get_db)):
 
 def get_users(db: Session):
     return list(db.query(User).all())
+
+def create_user(user2create):
+    with Session(engine) as session:
+        new_user = User (
+            email=user2create.email,
+            firstname = user2create.firstname,
+            lastname = user2create.lastname,
+            councilId = user2create.councilId,
+            birthday = user2create.birthday,
+            status = "Active"
+        )
+        session.add(new_user)
+        session.commit()
+    return 
