@@ -9,7 +9,7 @@ from db.models.userRoleAssignment import UserRoleAssignment
 from db.models.role import Role
 
 
-def get_user(userId: int, db: Session = Depends(get_db)):
+def get_user(userId: int, db):
     return db.query(User).filter(User.id == userId).first()
 
 def get_user_for_login(email: str, db: Session = Depends(get_db)):
@@ -38,8 +38,10 @@ def get_userpermission(id: int, db: Session = Depends(get_db)):
 def get_users(db: Session):
     return list(db.query(User).all())
 
-def create_user(user2create):
-    with Session(engine) as session:
+
+# create user if email not in db, return either new user id or False
+def create_user_in_db(user2create, db):
+    if not db.query(User).filter(User.email == user2create.email).first():  
         new_user = User (
             email=user2create.email,
             firstname = user2create.firstname,
@@ -48,6 +50,10 @@ def create_user(user2create):
             birthday = user2create.birthday,
             status = "Active"
         )
-        session.add(new_user)
-        session.commit()
-    return 
+        db.add(new_user)
+        db.commit()
+        return new_user.id 
+    else: return False
+
+def create_user_secret(id, db):
+    pass
