@@ -20,6 +20,19 @@ Returns:
 def get_user(userId: int, db: Session):
     return db.query(User).filter(User.id == userId).first()
 
+"""Databaseaccessobject to get the status of a specific user
+
+Parameters:
+    email (str): email of the user to return
+    db (Session): databaseconnection
+
+Returns:
+    User Status : requested user status by email
+"""
+def get_user_status(email: str, db: Session = Depends(get_db)):
+    user_status = db.query(User).filter(User.email == email).first().status
+    return user_status
+
 """Databaseaccessobject to get a specific user for login
 
 Parameters:
@@ -31,9 +44,9 @@ Returns:
 """
 def get_user_for_login(email: str, db: Session):
     user = db.query(User).filter(User.email == email).first()
-    userSecret = db.query(UserSecret).filter(UserSecret.userId == user.id).first()
+    user_secret = db.query(UserSecret).filter(UserSecret.userId == user.id).first()
 
-    return userSecret
+    return user_secret
 
 """Databaseaccessobject to get all permissions of a specific user
 lookup the user permission roles

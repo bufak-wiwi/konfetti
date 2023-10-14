@@ -7,9 +7,12 @@ from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
+from db.session import engine, get_db
+from sqlalchemy.orm import Session
 
 
-from db.dao.user import get_user, get_user_for_login, get_userpermission
+
+from db.dao.user import get_user, get_user_for_login, get_userpermission, get_user_status
 from db.models.user import User
 from endpoints.schemas.user import ShowUser
 from endpoints.schemas.auth import TokenData, Token
@@ -26,13 +29,13 @@ def verify_password(plain_password, hashed_password):
 def get_hash(password):
     return pwd_context.hash(password)
 
-def authenticate(username: str, password: str):
-    user_secrect = get_user_for_login(username)
+def authenticate(username: str, password: str, db: Session):
+    user_secrect = get_user_for_login(username, db)
     if not user_secrect:
         return False
     if not verify_password(password, user_secrect.password):
         return False
-    return get_user(user_secrect.userId)
+    return get_user(user_secrect.userId, db)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -91,21 +94,27 @@ class PermissionChecker:
 
 
 @router.post("/login") #, response_model=ShowUser
-def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    user = authenticate(form_data.username, form_data.password)
+def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
+    user = authenticate(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    if get_user_status(form_data.username, db) == "Inactive":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Account inactive, please reset your password",
+            headers={"WWW-Authenticate": "Bearer"},
+        ) 
     access_token_expires = timedelta(minutes=30)
     access_token = create_access_token(
-        data={"sub": user.id, "permissions": get_userpermission(user.id)}, expires_delta=access_token_expires
+        data={"sub": user.id, "permissions": get_userpermission(user.id, db)}, expires_delta=access_token_expires
     )
     # set access token to response cookie
     response = responses.Response()
-    response.body = {"access_token": access_token, "token_type": "bearer", **user} # outsmart swagger.io
+    response.body = {"access_token": access_token, "token_type": "bearer" , **user} # outsmart swagger.io
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
     return response
 

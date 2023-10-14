@@ -38,7 +38,7 @@ Returns:
     HTTP: JSON representation of one user, represented by the schema ShowUser
 """ 
 @router.get("/{id}", response_model=ShowUser)
-def get_specific_user(id: int, db: Session = Depends(get_db), db: Session = Depends(get_db)):
+def get_specific_user(id: int, db: Session = Depends(get_db)):
     return get_user(id, db)
     
 
