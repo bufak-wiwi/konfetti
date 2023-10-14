@@ -7,14 +7,13 @@ from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from db.session import engine, get_db
+from db.session import get_db
 from sqlalchemy.orm import Session
 
 
 
-from db.dao.user import get_user, get_user_for_login, get_userpermission, get_user_status
-from db.models.user import User
-from endpoints.schemas.user import ShowUser
+from db.dao.user import get_user, get_user_for_login, get_userpermission, get_user_status, send_reset, update_user_secret
+from endpoints.schemas.user import ShowUser, UpdateUser
 from endpoints.schemas.auth import TokenData, Token
 
 load_dotenv()
@@ -114,7 +113,21 @@ def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
     )
     # set access token to response cookie
     response = responses.Response()
-    response.body = {"access_token": access_token, "token_type": "bearer" , **user} # outsmart swagger.io
+    response.body = {"access_token": access_token, "token_type": "bearer" , **user} # outsmart swagger.io TODO: fix swagger issue with **user
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
     return response
 
+
+    #TODO: forgot pw functionality and proper email handling
+@router.post("/forgot-password", status_code=status.HTTP_202_ACCEPTED)
+def forgot_password(email: str, db: Session = Depends(get_db)):
+    #return send_reset(email, db)
+    pass
+    
+    #TODO: reset pw functionality with token handling
+@router.post("/reset-password")
+def reset_password(db: Session = Depends(get_db)):
+    # reset token validation
+    # pw hash
+    # send pw hash and new token to update_user_secret() in user dao
+    pass

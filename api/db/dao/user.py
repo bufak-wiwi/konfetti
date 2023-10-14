@@ -90,7 +90,7 @@ def get_users(db: Session):
 
 
 # create user if email not in db, return either new user id or False
-def create_user_in_db(user2create, db):
+def create_user_in_db(user2create, db: Session):
     if not db.query(User).filter(User.email == user2create.email).first():  
         new_user = User (
             email=user2create.email,
@@ -105,5 +105,17 @@ def create_user_in_db(user2create, db):
         return new_user.id 
     else: return False
 
-def create_user_secret(id, db):
+    #TODO: user secret creation from account creation in user endpoint
+def create_user_secret(id: int, db: Session):
     pass
+
+    #TODO: update user secret with new hash and tokens
+def update_user_secret(pwhash, db: Session):
+    pass
+
+def send_reset(email: str, db: Session):
+    if db.query(User).filter(User.email == email).first():
+        #TODO: add email functionality and reset token generation
+        pass
+    else:
+        pass
