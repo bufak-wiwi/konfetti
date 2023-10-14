@@ -42,18 +42,19 @@ app = start_application()
 
 Returns:
     HTTP: Response calculated by the path-endpointfunction
+TODO: Fix depends issue in connection with refresh_access_token()
 """
-@app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    # do something with the request before passing to endpointfunction
+# @app.middleware("http")
+# async def add_process_time_header(request: Request, call_next):
+#     # do something with the request before passing to endpointfunction
 
-    # pass the request to the endpointfunction, automatic identified by the path
-    response = await call_next(request)
+#     # pass the request to the endpointfunction, automatic identified by the path
+#     response = await call_next(request)
 
-    # do something with the response before returning
-    response.set_cookie(key="access_token", value=f"Bearer {refresh_access_token()}", httponly=True)
+#     # do something with the response before returning
+#     response.set_cookie(key="access_token", value=f"Bearer {refresh_access_token()}", httponly=True)
 
-    return response
+#     return response
 
 """Endpointfunction on the root of the api, basic return to test the serverstartup
 
