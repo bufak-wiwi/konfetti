@@ -48,7 +48,7 @@ def create_user_in_db(user2create, db):
             lastname = user2create.lastname,
             councilId = user2create.councilId,
             birthday = user2create.birthday,
-            status = "Active"
+            status = "Inactive"
         )
         db.add(new_user)
         db.commit()
