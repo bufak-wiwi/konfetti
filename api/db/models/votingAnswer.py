@@ -9,5 +9,5 @@ class VotingAnswer(Base):
     priority = Column(Integer, nullable=False)
     vote = Column(String(255), nullable=False)
 
-    council = relationship("council", backref="votingAnswer")
-    votingQuestion = relationship("votingQuestion", backref="votingAnswer")
+    council = relationship("Council", backref="votingAnswer")
+    votingQuestion = relationship("VotingQuestion", backref="votingAnswer")

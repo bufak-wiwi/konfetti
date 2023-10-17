@@ -13,8 +13,8 @@ class ConferenceApplication(Base):
     isAllowedToVote = Column(Boolean, nullable=False)
     applicationTypeId = Column(Integer, ForeignKey('applicationtype.id'), nullable=False)
 
-    user = relationship("user", backref="ConferenceApplication")
-    conference = relationship("conference", backref="ConferenceApplication")
-    sensible = relationship("sensible", cascade='delete', backref="ConferenceApplication")
-    council = relationship("council", backref="ConferenceApplication")
-    applicationType = relationship("applicationType", backref="ConferenceApplication")  
+    user = relationship("User", backref="ConferenceApplication")
+    conference = relationship("Conference", backref="ConferenceApplication")
+    sensible = relationship("Sensible", cascade='delete', backref="ConferenceApplication")
+    council = relationship("Council", backref="ConferenceApplication")
+    applicationType = relationship("ApplicationType", backref="ConferenceApplication")  

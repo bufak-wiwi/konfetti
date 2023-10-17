@@ -11,6 +11,6 @@ class ApplicationCode(Base):
     isUsed = Column(Boolean, nullable=False)
     applicationTypeId = Column(Integer, ForeignKey('applicationtype.id'), nullable=False)
 
-    conference = relationship("conference", backref="applicationCode")
-    council = relationship("council", backref="applicationCode")
-    applicationType = relationship("applicationType", backref="applicationCode")
+    conference = relationship("Conference", backref="applicationCode")
+    council = relationship("Council", backref="applicationCode")
+    applicationType = relationship("ApplicationType", backref="applicationCode")
