@@ -31,6 +31,8 @@ Returns:
 """
 def get_user_for_login(email: str, db: Session):
     user = db.query(User).filter(User.email == email).first()
+    if not user:
+        return None
     userSecret = db.query(UserSecret).filter(UserSecret.userId == user.id).first()
 
     return userSecret
@@ -73,4 +75,4 @@ Returns:
     List[User]: list of all users
 """
 def get_users(db: Session):
-    return list(db.query(User).all())
+    return db.query(User).all()
