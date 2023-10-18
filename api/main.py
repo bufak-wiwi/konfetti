@@ -9,12 +9,12 @@ New API for conferencemanagementsystem for BuFaK
 import os
 from dotenv import load_dotenv
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 
 from db.session import engine 
 from db.base import Base
 from endpoints.api import api_router
-from endpoints.auth import PermissionChecker, get_current_user, refresh_access_token
+# from endpoints.auth import PermissionChecker, get_current_user, refresh_access_token
 
 load_dotenv()
 
