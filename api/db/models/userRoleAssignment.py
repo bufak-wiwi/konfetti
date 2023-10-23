@@ -8,6 +8,6 @@ class UserRoleAssignment(Base):
     roleId = Column(Integer, ForeignKey('role.id'), nullable=False, primary_key=True)
     conferenceId = Column(Integer, ForeignKey('conference.id'))
                                               
-    user = relationship("user", backref="conferenceApplication")
-    conference = relationship("conference", backref="conferenceApplication")
-    role = relationship("role", backref="conferenceApplication")
+    user = relationship("User", backref="conferenceApplication")
+    conference = relationship("Conference", backref="conferenceApplication")
+    role = relationship("Role", backref="conferenceApplication")
