@@ -15,4 +15,4 @@ class VotingQuestion(Base):
     votes = Column(JSON, nullable=False)
     result = Column(String(255), nullable=False)
 
-    conference = relationship("conference", backref="votingquestion")
+    conference = relationship("Conference", backref="votingquestion")

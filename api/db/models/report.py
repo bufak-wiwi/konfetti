@@ -12,4 +12,4 @@ class Report(Base):
     reportTime = Column(DateTime(timezone=True), default=func.now(), nullable=False)
     reportApplicationInfo = Column(String(255), nullable=False)
 
-    user = relationship("user", backref="report")
+    user = relationship("User", backref="report")

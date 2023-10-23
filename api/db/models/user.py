@@ -11,4 +11,4 @@ class User(Base):
     birthday = Column(Date, nullable=False, index=True)
     status = Column(String(255), nullable=False, index=True)
 
-    council = relationship("council", backref="user")
+    council = relationship("Council", backref="user")
