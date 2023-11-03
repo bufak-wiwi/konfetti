@@ -14,7 +14,7 @@ from fastapi import FastAPI, Request
 from db.session import engine 
 from db.base import Base
 from endpoints.api import api_router
-from endpoints.auth import PermissionChecker, get_current_user, refresh_access_token
+# from endpoints.auth import PermissionChecker, get_current_user, refresh_access_token
 
 load_dotenv()
 
@@ -42,19 +42,21 @@ app = start_application()
 
 Returns:
     HTTP: Response calculated by the path-endpointfunction
-TODO: Fix depends issue in connection with refresh_access_token()
 """
 # @app.middleware("http")
-# async def add_process_time_header(request: Request, call_next):
+# async def add_access_token(request: Request, call_next):
 #     # do something with the request before passing to endpointfunction
+#     # token = request.cookies.get("access_token")
 
 #     # pass the request to the endpointfunction, automatic identified by the path
 #     response = await call_next(request)
 
-#     # do something with the response before returning
-#     response.set_cookie(key="access_token", value=f"Bearer {refresh_access_token()}", httponly=True)
+#     # # do something with the response before returning
+#     # if token:
+#     #     response.set_cookie(key="access_token", value=f"{refresh_access_token(current_user = get_current_user(token))}", httponly=True)
 
 #     return response
+
 
 """Endpointfunction on the root of the api, basic return to test the serverstartup
 

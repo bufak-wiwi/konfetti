@@ -44,9 +44,11 @@ Returns:
 """
 def get_user_for_login(email: str, db: Session):
     user = db.query(User).filter(User.email == email).first()
-    user_secret = db.query(UserSecret).filter(UserSecret.userId == user.id).first()
+    if not user:
+        return None
+    userSecret = db.query(UserSecret).filter(UserSecret.userId == user.id).first()
 
-    return user_secret
+    return userSecret
 
 """Databaseaccessobject to get all permissions of a specific user
 lookup the user permission roles

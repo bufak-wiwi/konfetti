@@ -9,4 +9,4 @@ class WorkshopAttendee(Base):
 
     
     user = relationship("User", backref="workshopAttendee")
-    workshop = relationship("Workshop", backref="workshopAttendee")
+    workshop_attended = relationship("Workshop", backref="workshopAttendee")
