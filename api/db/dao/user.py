@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends
 from typing import List
+from datetime import datetime, timedelta
 
 from db.session import engine, get_db
 from db.models.user import User
+from endpoints.auth import get_hash, create_access_token
 from db.models.userSecret import UserSecret
 from db.models.userRoleAssignment import UserRoleAssignment
 from db.models.role import Role
@@ -109,6 +111,18 @@ def create_user_in_db(user2create, db: Session):
 
     #TODO: user secret creation from account creation in user endpoint
 def create_user_secret(id: int, db: Session):
+    validUntilDate = datetime.now() + timedelta(days=7)
+    regToken = create_access_token({"email": get_user(id).email, "exp": validUntilDate})
+    new_user_secret =  UserSecret (
+        userId = id,
+        password = get_hash(),
+        registrationToken = regToken,
+        registrationTokenValidUntil = validUntilDate
+        )
+    db.add(new_user_secret)
+    db.commit()
+    return regToken
+
     pass
 
     #TODO: update user secret with new hash and tokens

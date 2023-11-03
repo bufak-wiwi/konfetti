@@ -58,8 +58,9 @@ Returns:
 def create_user(user2create: CreateUser, db: Session = Depends(get_db)):
     new_user_id = create_user_in_db(user2create, db)
     if new_user_id:
+        create_user_secret(new_user_id, db)
         return True
-        # TODO: create_user_secret(new_user_id, db) #either with pw from user entry or with placeholder
+            # TODO: create_user_secret(new_user_id, db) #either with pw from user entry or with placeholder
     else: 
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

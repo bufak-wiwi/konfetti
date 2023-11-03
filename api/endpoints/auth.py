@@ -36,7 +36,7 @@ def authenticate(username: str, password: str, db: Session):
         return False
     return get_user(user_secrect.userId, db)
 
-
+#TODO: refactoring create jwt token
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
@@ -48,6 +48,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
+#TODO: refactor to encode 
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], request: Request, db: Session = Depends(get_db)):
     if not token: 
         token = request.cookies.get("access_token")
