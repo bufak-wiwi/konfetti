@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 
 from db.session import engine, get_db
 from db.models.user import User
-from endpoints.auth import get_hash, create_access_token
 from db.models.userSecret import UserSecret
 from db.models.userRoleAssignment import UserRoleAssignment
 from db.models.role import Role
@@ -110,20 +109,15 @@ def create_user_in_db(user2create, db: Session):
     else: return False
 
     #TODO: user secret creation from account creation in user endpoint
-def create_user_secret(id: int, db: Session):
-    validUntilDate = datetime.now() + timedelta(days=7)
-    regToken = create_access_token({"email": get_user(id).email, "exp": validUntilDate})
+def create_user_secret(secret2create, db: Session):
     new_user_secret =  UserSecret (
-        userId = id,
-        password = get_hash(),
-        registrationToken = regToken,
-        registrationTokenValidUntil = validUntilDate
+        userId = secret2create.id,
+        password = secret2create.password,
+        registrationToken = secret2create.registrationToken,
+        registrationTokenValidUntil = secret2create.registrationTokenValidUntil
         )
     db.add(new_user_secret)
     db.commit()
-    return regToken
-
-    pass
 
     #TODO: update user secret with new hash and tokens
 def update_user_secret(pwhash, db: Session):

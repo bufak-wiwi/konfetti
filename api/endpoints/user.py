@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -7,12 +8,15 @@ from fastapi.encoders import jsonable_encoder
 
 from db.session import get_db
 from db.dao.user import get_users, create_user_in_db, get_user, create_user_secret
-from endpoints.auth import PermissionChecker, get_current_user, refresh_token_in_response
+from endpoints.helper.auth.authHelper import encode_jwt, refresh_token_in_response, generate_jwt
+from endpoints.auth import PermissionChecker, depend_token
 from endpoints.schemas.auth import TokenData
 from endpoints.schemas.user import ShowUser, CreateUser, UpdateUser
 from endpoints.errorhandler import errorhandler
 from db.session import get_db
 from sqlalchemy.orm import Session
+
+from db.models.userSecret import UserSecret
 
 
 router = APIRouter()
@@ -24,7 +28,7 @@ Returns:
     HTTP: JSON representation of list of all user, each represented by the schema ShowUser
 """
 @router.get("/", dependencies=[Depends(PermissionChecker(["USER"]))], response_model=List[ShowUser])
-def get_all(db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)):
+def get_all(db: Session = Depends(get_db), current_user: TokenData = Depends(depend_token)):
     try:
         all_users = get_users(db)
 
@@ -58,9 +62,11 @@ Returns:
 def create_user(user2create: CreateUser, db: Session = Depends(get_db)):
     new_user_id = create_user_in_db(user2create, db)
     if new_user_id:
-        create_user_secret(new_user_id, db)
+        validUntilDate = datetime.now() + timedelta(days=7)
+        regToken = generate_jwt({"sub": str(new_user_id),"email": get_user(id).email, "exp": validUntilDate})
+        secret2create = UserSecret(userId=new_user_id, password=None, registrationToken = regToken, registrationTokenValidUntil = validUntilDate)
+        create_user_secret(secret2create, db)
         return True
-            # TODO: create_user_secret(new_user_id, db) #either with pw from user entry or with placeholder
     else: 
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -78,5 +84,6 @@ Returns:
     HTTP: 
 """
 @router.put("/{id}", dependencies=[Depends(PermissionChecker(["USER"]))])
-def update_user(user2update: UpdateUser, id: int, db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)):
+def update_user(user2update: UpdateUser, id: int, db: Session = Depends(get_db), current_user: TokenData = Depends(depend_token
+)):
     pass
