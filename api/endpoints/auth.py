@@ -6,8 +6,9 @@ from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 
 from db.session import get_db
-from db.dao.user import get_user, get_user_for_login, get_userpermission, get_user_status
+from db.dao.user import get_user, get_user_for_login, get_userpermission, get_user_status, get_user_by_email, update_token
 from endpoints.schemas.auth import LoginToken, TokenData
+from endpoints.schemas.user import ShowUser
 from endpoints.helper.auth.authHelper import generate_jwt, verify_password, encode_jwt, oauth2_scheme
 
 router = APIRouter()
@@ -71,11 +72,22 @@ def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
     return response
 
 
-    #TODO: forgot pw functionality and proper email handling
 @router.post("/forgot-password", status_code=status.HTTP_202_ACCEPTED)
 def forgot_password(email: str, db: Session = Depends(get_db)):
-    #return send_reset(email, db)
-    pass
+    user = get_user_by_email(email, db)
+    if user:
+        user_to_change = ShowUser (
+            id = user.id,
+            email = user.email,
+            status = user.status
+            )
+        valid_until_date = datetime.now() + timedelta(days=2)
+        reset_token = generate_jwt({"sub": str(user_to_change.id),"email": user_to_change.email, "exp": valid_until_date})
+        update_token(user_to_change.id, reset_token, valid_until_date, db) #TODO: Update_token not done
+    #TODO: send email with reset token and instructions to change password
+        return reset_token
+    else:
+        return False
     
     #TODO: reset pw functionality with token handling
 @router.post("/reset-password")

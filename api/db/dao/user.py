@@ -105,27 +105,33 @@ def create_user_in_db(user2create, db: Session):
         )
         db.add(new_user)
         db.commit()
-        return new_user.id 
+        return new_user.id
     else: return False
 
     #TODO: user secret creation from account creation in user endpoint
 def create_user_secret(secret2create, db: Session):
     new_user_secret =  UserSecret (
-        userId = secret2create.id,
+        userId = secret2create.userId,
         password = secret2create.password,
         registrationToken = secret2create.registrationToken,
         registrationTokenValidUntil = secret2create.registrationTokenValidUntil
         )
     db.add(new_user_secret)
     db.commit()
+    return new_user_secret.registrationToken
 
     #TODO: update user secret with new hash and tokens
 def update_user_secret(pwhash, db: Session):
     pass
 
-def send_reset(email: str, db: Session):
-    if db.query(User).filter(User.email == email).first():
+def get_user_by_email(email: str, db: Session):
+    user_exists = db.query(User).filter(User.email == email).first()
         #TODO: add email functionality and reset token generation
-        pass
+    if user_exists:    
+        return user_exists
     else:
-        pass
+        return False
+
+def update_token(id: int, token, valid_until_date: datetime, db:Session):
+    #TODO: update query for register token in userSecret
+    pass

@@ -4,11 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
+# from endpoints.helper.mailing.mailing import sendEmail
 
 
 from db.session import get_db
 from db.dao.user import get_users, create_user_in_db, get_user, create_user_secret
-from endpoints.helper.auth.authHelper import encode_jwt, refresh_token_in_response, generate_jwt
+from endpoints.helper.auth.authHelper import encode_jwt, refresh_token_in_response, generate_jwt, get_hash, create_random_secret
 from endpoints.auth import PermissionChecker, depend_token
 from endpoints.schemas.auth import TokenData
 from endpoints.schemas.user import ShowUser, CreateUser, UpdateUser
@@ -62,11 +63,13 @@ Returns:
 def create_user(user2create: CreateUser, db: Session = Depends(get_db)):
     new_user_id = create_user_in_db(user2create, db)
     if new_user_id:
-        validUntilDate = datetime.now() + timedelta(days=7)
-        regToken = generate_jwt({"sub": str(new_user_id),"email": get_user(id).email, "exp": validUntilDate})
-        secret2create = UserSecret(userId=new_user_id, password=None, registrationToken = regToken, registrationTokenValidUntil = validUntilDate)
-        create_user_secret(secret2create, db)
-        return True
+        valid_until_date = datetime.now() + timedelta(days=7)
+        register_token = generate_jwt({"sub": str(new_user_id),"email": get_user(new_user_id, db).email, "exp": valid_until_date})
+        secret_to_create = UserSecret(userId=new_user_id, password=get_hash(create_random_secret()), registrationToken = register_token, registrationTokenValidUntil = valid_until_date)
+        valid_token = create_user_secret(secret_to_create, db)
+        # sendEmail(template="sample",to="testreciupient@test.local", subj="Testmail", replyTo="testeplytp@test.local",fields={"name":"Konfetti User","message":"Thank you for using our system. Have fun."})
+
+        return valid_token #TODO send register email with valid token
     else: 
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

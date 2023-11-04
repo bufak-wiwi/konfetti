@@ -1,4 +1,5 @@
 import os
+import string, random
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from typing import Annotated, List
@@ -66,3 +67,7 @@ def verify_password(plain_password, hashed_password):
 
 def get_hash(password):
     return pwd_context.hash(password)
+
+def create_random_secret():
+    letters = list(string.ascii_letters)
+    return "".join(random.choices(letters, k=48))
