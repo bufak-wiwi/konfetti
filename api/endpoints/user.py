@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
-# from endpoints.helper.mailing.mailing import sendEmail
+from endpoints.helper.mailing.mailing import sendEmail
 
 
 from db.session import get_db
