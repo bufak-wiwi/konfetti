@@ -61,15 +61,24 @@ Returns:
 """
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_user(user2create: CreateUser, db: Session = Depends(get_db)):
-    new_user_id = create_user_in_db(user2create, db)
-    if new_user_id:
+    new_user = create_user_in_db(user2create, db)
+    if new_user:
         valid_until_date = datetime.now() + timedelta(days=7)
-        register_token = generate_jwt({"sub": str(new_user_id),"email": get_user(new_user_id, db).email, "exp": valid_until_date})
-        secret_to_create = UserSecret(userId=new_user_id, password=get_hash(create_random_secret()), registrationToken = register_token, registrationTokenValidUntil = valid_until_date)
-        valid_token = create_user_secret(secret_to_create, db)
-        # sendEmail(template="sample",to="testreciupient@test.local", subj="Testmail", replyTo="testeplytp@test.local",fields={"name":"Konfetti User","message":"Thank you for using our system. Have fun."})
+        print("gültig bis: ", valid_until_date)
+        register_token = generate_jwt({"sub": str(new_user.id),
+                                       "email": get_user(new_user.id, db).email, 
+                                       "exp": valid_until_date})
+        secret_to_create = UserSecret(userId=new_user.id, 
+                                      password=get_hash(create_random_secret()), 
+                                      registrationToken = register_token, 
+                                      registrationTokenValidUntil = valid_until_date)
+        new_secret = create_user_secret(secret_to_create, db)
+        #TODO change template for dev env on server and handle valid link
+        sendEmail(template="sample",to=new_user.email, subj="Willkommen in Konfetti", replyTo="noreply@test.com",
+                  fields={"name":new_user.firstname,
+                          "message":"//nThank you for using our system. Have fun. To finish the your setup, please set your password here: " + "/reset-password/" + new_secret.registrationToken})
 
-        return valid_token #TODO send register email with valid token
+        #return valid_token 
     else: 
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

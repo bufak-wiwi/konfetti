@@ -105,10 +105,9 @@ def create_user_in_db(user2create, db: Session):
         )
         db.add(new_user)
         db.commit()
-        return new_user.id
+        return new_user
     else: return False
 
-    #TODO: user secret creation from account creation in user endpoint
 def create_user_secret(secret2create, db: Session):
     new_user_secret =  UserSecret (
         userId = secret2create.userId,
@@ -118,20 +117,38 @@ def create_user_secret(secret2create, db: Session):
         )
     db.add(new_user_secret)
     db.commit()
-    return new_user_secret.registrationToken
+    return new_user_secret
 
-    #TODO: update user secret with new hash and tokens
-def update_user_secret(pwhash, db: Session):
-    pass
+
+def update_user_secret(id, pwhash, db: Session):
+    expire_token = datetime.now()
+    user_secret_to_update = db.query(UserSecret).filter(UserSecret.userId == id).first()
+    user_secret_to_update.password = pwhash
+    user_secret_to_update.registrationTokenValidUntil = expire_token
+
+    user_to_update = db.query(User).filter(User.id == id).first()
+    user_to_update.status = "Active"
+
+    db.commit()
+    return True
 
 def get_user_by_email(email: str, db: Session):
     user_exists = db.query(User).filter(User.email == email).first()
-        #TODO: add email functionality and reset token generation
     if user_exists:    
         return user_exists
     else:
         return False
 
 def update_token(id: int, token, valid_until_date: datetime, db:Session):
-    #TODO: update query for register token in userSecret
-    pass
+    update_secret_token = db.query(UserSecret).filter(UserSecret.userId == id).first()
+    update_secret_token.registrationToken = token
+    update_secret_token.registrationTokenValidUntil = valid_until_date
+    db.commit()
+    return update_secret_token
+
+
+def reset_token(token, db: Session):
+    reset_secret = db.query(UserSecret).filter(UserSecret.registrationToken == token).first()
+    if reset_secret:    
+        return reset_secret
+    else: return False

@@ -11,7 +11,7 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
 from endpoints.schemas.auth import TokenData
-from db.dao.user import get_user
+from db.dao.user import get_user, reset_token
 from db.models.user import User
 
 load_dotenv()
@@ -71,3 +71,17 @@ def get_hash(password):
 def create_random_secret():
     letters = list(string.ascii_letters)
     return "".join(random.choices(letters, k=48))
+
+def token_expiration_validation(token, current_time, db: Session):
+    decoded_token = jwt.decode(token, os.getenv("JWT_SECRET"), algorithms=["HS256"])
+    if "exp" in decoded_token:
+        exp_timestamp = decoded_token["exp"]
+        if current_time < exp_timestamp:
+            return reset_token(token, db)
+        else:
+            print("Error in timestamp")
+            return False
+    else: 
+        print("error in token")
+        return False
+    #TODO: Handle error cases properly

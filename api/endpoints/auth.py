@@ -6,10 +6,11 @@ from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 
 from db.session import get_db
-from db.dao.user import get_user, get_user_for_login, get_userpermission, get_user_status, get_user_by_email, update_token
+from db.dao.user import get_user, get_user_for_login, get_userpermission, get_user_status, get_user_by_email, update_token, update_user_secret
 from endpoints.schemas.auth import LoginToken, TokenData
 from endpoints.schemas.user import ShowUser
-from endpoints.helper.auth.authHelper import generate_jwt, verify_password, encode_jwt, oauth2_scheme
+from endpoints.helper.auth.authHelper import generate_jwt, verify_password, encode_jwt, oauth2_scheme, get_hash, token_expiration_validation
+from endpoints.helper.mailing.mailing import sendEmail
 
 router = APIRouter()
 
@@ -82,17 +83,31 @@ def forgot_password(email: str, db: Session = Depends(get_db)):
             status = user.status
             )
         valid_until_date = datetime.now() + timedelta(days=2)
+        print("reset token gültig bis", valid_until_date)
         reset_token = generate_jwt({"sub": str(user_to_change.id),"email": user_to_change.email, "exp": valid_until_date})
-        update_token(user_to_change.id, reset_token, valid_until_date, db) #TODO: Update_token not done
-    #TODO: send email with reset token and instructions to change password
-        return reset_token
+        updated_token = update_token(user_to_change.id, reset_token, valid_until_date, db)
+    #TODO: change dev env for server
+        if updated_token:
+            sendEmail(template="sample",to=user_to_change.email, subj="Willkommen in Konfetti", replyTo="noreply@test.com",
+                  fields={"name":user.firstname,
+                          "message":"//nThank you for using our system. Have fun. To finish the your setup, please set your password here: " + "/reset-password/" + reset_token})
+            return reset_token
+        else:
+            #TODO: handle errors properly
+            print("error in updated_token") 
+            return False
     else:
+        print("error in user")
         return False
-    
-    #TODO: reset pw functionality with token handling
-@router.post("/reset-password")
-def reset_password(db: Session = Depends(get_db)):
-    # reset token validation
-    # pw hash
-    # send pw hash and new token to update_user_secret() in user dao
-    pass
+
+@router.post("/reset-password/{reset_token}")
+def reset_password(password, reset_token, db: Session = Depends(get_db)): #TODO: handle password via OAuth
+    reset_req = token_expiration_validation(reset_token, datetime.now().timestamp(), db)
+
+    if reset_req and reset_req.registrationToken == reset_token:
+        user_to_change = get_user(reset_req.userId, db)
+        new_hash = get_hash(password)
+        update_user_secret(user_to_change.id, new_hash, db) 
+    #TODO: response handling 
+        return True
+    else: return False
