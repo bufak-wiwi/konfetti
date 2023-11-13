@@ -31,8 +31,8 @@ Returns:
     User Status : requested user status by email
 """
 def get_user_status(email: str, db: Session = Depends(get_db)):
-    user_status = db.query(User).filter(User.email == email).first().status
-    return user_status
+    return db.query(User).filter(User.email == email).first().status
+    
 
 """Databaseaccessobject to get a specific user for login
 
@@ -92,15 +92,22 @@ def get_users(db: Session):
     return list(db.query(User).all())
 
 
-# create user if email not in db, return either new user id or False
-def create_user_in_db(user2create, db: Session):
-    if not db.query(User).filter(User.email == user2create.email).first():  
+"""Databaseaccessobject to create a new user
+
+Parameters:
+    user_to_create (dict): user schema that fits db model User
+
+Returns:
+    New user object or False
+"""
+def create_user_in_db(user_to_create, db: Session):
+    if not db.query(User).filter(User.email == user_to_create.email).first():  
         new_user = User (
-            email=user2create.email,
-            firstname = user2create.firstname,
-            lastname = user2create.lastname,
-            councilId = user2create.councilId,
-            birthday = user2create.birthday,
+            email=user_to_create.email,
+            firstname = user_to_create.firstname,
+            lastname = user_to_create.lastname,
+            councilId = user_to_create.councilId,
+            birthday = user_to_create.birthday,
             status = "Inactive"
         )
         db.add(new_user)
@@ -108,47 +115,82 @@ def create_user_in_db(user2create, db: Session):
         return new_user
     else: return False
 
-def create_user_secret(secret2create, db: Session):
+
+"""Databaseaccessobject to create a new user secret in db
+
+Parameters:
+    secret_to_create (dict): user secret schema that fits db model UserSecret
+
+Returns:
+    New UserSecret object
+"""
+def create_user_secret(secret_to_create, db: Session):
     new_user_secret =  UserSecret (
-        userId = secret2create.userId,
-        password = secret2create.password,
-        registrationToken = secret2create.registrationToken,
-        registrationTokenValidUntil = secret2create.registrationTokenValidUntil
+        userId = secret_to_create.userId,
+        password = secret_to_create.password,
+        registrationToken = secret_to_create.registrationToken,
+        registrationTokenValidUntil = secret_to_create.registrationTokenValidUntil
         )
     db.add(new_user_secret)
     db.commit()
     return new_user_secret
 
+"""Databaseaccessobject to update an existing user secret in db
 
-def update_user_secret(id, pwhash, db: Session):
-    expire_token = datetime.now()
-    user_secret_to_update = db.query(UserSecret).filter(UserSecret.userId == id).first()
-    user_secret_to_update.password = pwhash
-    user_secret_to_update.registrationTokenValidUntil = expire_token
+Updates password, revokes token, set user status to active
 
-    user_to_update = db.query(User).filter(User.id == id).first()
+Parameters:
+    update_secret (dict): db schema that fits db model UserSecret for this purpose
+
+Returns:
+    None
+"""
+def update_user_secret(update_secret, db: Session):
+    user_secret_to_update = db.query(UserSecret).filter(UserSecret.userId == update_secret.userId).first()
+    user_secret_to_update.password = update_secret.password
+    user_secret_to_update.registrationToken = update_secret.registrationToken
+    user_secret_to_update.registrationTokenValidUntil = update_secret.registrationTokenValidUntil
+
+    user_to_update = db.query(User).filter(User.id == update_secret.userId).first()
     user_to_update.status = "Active"
 
     db.commit()
-    return True
+    return
 
+"""Databaseaccessobject to get an existing user by email
+
+Parameters:
+    email (str): email address of a user
+
+Returns:
+    User object or NoneType object
+"""
 def get_user_by_email(email: str, db: Session):
-    user_exists = db.query(User).filter(User.email == email).first()
-    if user_exists:    
-        return user_exists
-    else:
-        return False
+    return db.query(User).filter(User.email == email).first()
 
-def update_token(id: int, token, valid_until_date: datetime, db:Session):
-    update_secret_token = db.query(UserSecret).filter(UserSecret.userId == id).first()
-    update_secret_token.registrationToken = token
-    update_secret_token.registrationTokenValidUntil = valid_until_date
+""""Databaseaccessobject to update an existing user secret registration token
+
+Parameters:
+    secret_to_change (UpdateToken)
+    db
+
+Returns:
+    UserSecret object
+"""
+def update_token(secret_to_change, db:Session):
+    update_secret_token = db.query(UserSecret).filter(UserSecret.userId == secret_to_change.userId).first()
+    update_secret_token.registrationToken = secret_to_change.registrationToken
+    update_secret_token.registrationTokenValidUntil = secret_to_change.registrationTokenValidUntil
     db.commit()
     return update_secret_token
 
+""""Databaseaccessobject to get an existing user secret registration token by token
 
-def reset_token(token, db: Session):
-    reset_secret = db.query(UserSecret).filter(UserSecret.registrationToken == token).first()
-    if reset_secret:    
-        return reset_secret
-    else: return False
+Parameters:
+    token (str): Encoded JWT given as parameter
+
+Returns:
+    UserSecret object or NoneType
+"""
+def get_reset_token(token, db: Session):
+    return db.query(UserSecret).filter(UserSecret.registrationToken == token).first()

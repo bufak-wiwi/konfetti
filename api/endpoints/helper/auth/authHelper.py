@@ -11,7 +11,7 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
 from endpoints.schemas.auth import TokenData
-from db.dao.user import get_user, reset_token
+from db.dao.user import get_user, get_reset_token
 from db.models.user import User
 
 load_dotenv()
@@ -30,13 +30,17 @@ def generate_jwt(data: dict, type: str = "access", expires_delta: timedelta | No
     return encoded_jwt
 
 
-def encode_jwt(token, db: Session):
+def decode_jwt(token, db: Session):
     payload = jwt.decode(token, os.getenv("JWT_SECRET"), algorithms=["HS256"])
     userId: str = payload.get("sub")
     if "permissions" in payload.keys():
         user_permissions: dict = payload.get("permissions")
+    else: 
+        user_permissions: dict = {}
     if "email" in payload.keys():
         user_email: str = payload.get("email")
+    else:
+        user_email: str = ""
     if userId is None:
         raise JWTError
     token_data = TokenData(userId=userId, email=user_email, permissions=user_permissions)
@@ -53,8 +57,8 @@ def refresh_token(encoded_jwt: TokenData, expires_delta: timedelta | None = None
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    decoded_jwt = jwt.encode(to_encode, os.getenv("JWT_SECRET"), algorithm="HS256")
-    return decoded_jwt
+    encoded_jwt = jwt.encode(to_encode, os.getenv("JWT_SECRET"), algorithm="HS256")
+    return encoded_jwt
     
 def refresh_token_in_response(response, current_user):
 
@@ -71,17 +75,3 @@ def get_hash(password):
 def create_random_secret():
     letters = list(string.ascii_letters)
     return "".join(random.choices(letters, k=48))
-
-def token_expiration_validation(token, current_time, db: Session):
-    decoded_token = jwt.decode(token, os.getenv("JWT_SECRET"), algorithms=["HS256"])
-    if "exp" in decoded_token:
-        exp_timestamp = decoded_token["exp"]
-        if current_time < exp_timestamp:
-            return reset_token(token, db)
-        else:
-            print("Error in timestamp")
-            return False
-    else: 
-        print("error in token")
-        return False
-    #TODO: Handle error cases properly

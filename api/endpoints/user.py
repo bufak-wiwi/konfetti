@@ -1,6 +1,6 @@
 from typing import List
 from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
@@ -9,15 +9,15 @@ from endpoints.helper.mailing.mailing import sendEmail
 
 from db.session import get_db
 from db.dao.user import get_users, create_user_in_db, get_user, create_user_secret
-from endpoints.helper.auth.authHelper import encode_jwt, refresh_token_in_response, generate_jwt, get_hash, create_random_secret
+from endpoints.helper.auth.authHelper import decode_jwt, refresh_token_in_response, generate_jwt, get_hash, create_random_secret
 from endpoints.auth import PermissionChecker, depend_token
 from endpoints.schemas.auth import TokenData
 from endpoints.schemas.user import ShowUser, CreateUser, UpdateUser
+from endpoints.schemas.usersecret import UserSecret
 from endpoints.errorhandler import errorhandler
 from db.session import get_db
 from sqlalchemy.orm import Session
 
-from db.models.userSecret import UserSecret
 
 
 router = APIRouter()
@@ -51,34 +51,33 @@ Returns:
 def get_specific_user(id: int, db: Session = Depends(get_db)):
     return get_user(id, db)
 
-"""Endpoint
+"""Endpoint to create a new user
 
 Parameters:
-    user2create (CreateUser): [description]
+    user2create (CreateUser): body parameters for new user
 
 Returns:
-    HTTP: 
+    HTTP: 201 Created or 409 Conflict if duplicate email
 """
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_user(user2create: CreateUser, db: Session = Depends(get_db)):
+def create_user(user2create: CreateUser, request: Request, db: Session = Depends(get_db)):
     new_user = create_user_in_db(user2create, db)
     if new_user:
-        valid_until_date = datetime.now() + timedelta(days=7)
-        print("gültig bis: ", valid_until_date)
+        expiration_time = timedelta(days=7)
         register_token = generate_jwt({"sub": str(new_user.id),
-                                       "email": get_user(new_user.id, db).email, 
-                                       "exp": valid_until_date})
+                                       "email": new_user.email}, 
+                                       expires_delta=expiration_time)
+        
+        valid_until = datetime.utcnow() + expiration_time
         secret_to_create = UserSecret(userId=new_user.id, 
                                       password=get_hash(create_random_secret()), 
                                       registrationToken = register_token, 
-                                      registrationTokenValidUntil = valid_until_date)
+                                      registrationTokenValidUntil = valid_until)
         new_secret = create_user_secret(secret_to_create, db)
         #TODO change template for dev env on server and handle valid link
-        sendEmail(template="sample",to=new_user.email, subj="Willkommen in Konfetti", replyTo="noreply@test.com",
+        return sendEmail(template="sample",to=new_user.email, subj="Willkommen in Konfetti", replyTo="noreply@test.com",
                   fields={"name":new_user.firstname,
-                          "message":"//nThank you for using our system. Have fun. To finish the your setup, please set your password here: " + "/reset-password/" + new_secret.registrationToken})
-
-        #return valid_token 
+                          "message":f"//nThank you for using our system. Have fun. To finish the your setup, please set your password here://n{request.base_url}reset-password/{new_secret.registrationToken}"})
     else: 
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

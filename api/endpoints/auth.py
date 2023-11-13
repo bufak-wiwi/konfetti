@@ -9,7 +9,8 @@ from db.session import get_db
 from db.dao.user import get_user, get_user_for_login, get_userpermission, get_user_status, get_user_by_email, update_token, update_user_secret
 from endpoints.schemas.auth import LoginToken, TokenData
 from endpoints.schemas.user import ShowUser
-from endpoints.helper.auth.authHelper import generate_jwt, verify_password, encode_jwt, oauth2_scheme, get_hash, token_expiration_validation
+from endpoints.schemas.usersecret import ResetUser, UserSecret, UpdateToken
+from endpoints.helper.auth.authHelper import generate_jwt, verify_password, decode_jwt, oauth2_scheme, get_hash, get_reset_token, create_random_secret
 from endpoints.helper.mailing.mailing import sendEmail
 
 router = APIRouter()
@@ -26,7 +27,7 @@ def depend_token(token: Annotated[str, Depends(oauth2_scheme)], request: Request
     if not token: 
         token = request.cookies.get("access_token")
     try:
-        return encode_jwt(token, db)
+        return decode_jwt(token, db)
     except Exception as ex:
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -73,8 +74,17 @@ def authenticate_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
     return response
 
 
+"""Endpoint to request a password reset via email
+
+Parameters:
+    email (str): Email address which shall have a password reset 
+    request (Request): [Description]
+
+Returns:
+    HTTP: 202 Accepted in every case
+"""
 @router.post("/forgot-password", status_code=status.HTTP_202_ACCEPTED)
-def forgot_password(email: str, db: Session = Depends(get_db)):
+def forgot_password(email: str, request: Request, db: Session = Depends(get_db)):
     user = get_user_by_email(email, db)
     if user:
         user_to_change = ShowUser (
@@ -82,32 +92,57 @@ def forgot_password(email: str, db: Session = Depends(get_db)):
             email = user.email,
             status = user.status
             )
-        valid_until_date = datetime.now() + timedelta(days=2)
-        print("reset token gültig bis", valid_until_date)
-        reset_token = generate_jwt({"sub": str(user_to_change.id),"email": user_to_change.email, "exp": valid_until_date})
-        updated_token = update_token(user_to_change.id, reset_token, valid_until_date, db)
+        expiration_time = timedelta(days=2)
+        reset_token = generate_jwt({"sub": str(user_to_change.id),"email": user_to_change.email}, expires_delta=expiration_time)
+
+        token_to_change = UpdateToken (
+            userId = user_to_change.id,
+            registrationToken = reset_token,
+            registrationTokenValidUntil = datetime.now() + expiration_time
+        )
+        updated_token = update_token(token_to_change, db)
     #TODO: change dev env for server
         if updated_token:
-            sendEmail(template="sample",to=user_to_change.email, subj="Willkommen in Konfetti", replyTo="noreply@test.com",
+            return sendEmail(template="sample",to=user_to_change.email, subj="Passwort zurücksetzen", replyTo="noreply@test.com",
                   fields={"name":user.firstname,
-                          "message":"//nThank you for using our system. Have fun. To finish the your setup, please set your password here: " + "/reset-password/" + reset_token})
-            return reset_token
+                          "message":f"//nIt looks like your forgot your password. Please reset your password here: //n{request.base_url}reset-password/{updated_token.registrationToken}"})
         else:
-            #TODO: handle errors properly
-            print("error in updated_token") 
-            return False
+            return
     else:
-        print("error in user")
-        return False
+        return
 
-@router.post("/reset-password/{reset_token}")
-def reset_password(password, reset_token, db: Session = Depends(get_db)): #TODO: handle password via OAuth
-    reset_req = token_expiration_validation(reset_token, datetime.now().timestamp(), db)
 
-    if reset_req and reset_req.registrationToken == reset_token:
-        user_to_change = get_user(reset_req.userId, db)
-        new_hash = get_hash(password)
-        update_user_secret(user_to_change.id, new_hash, db) 
-    #TODO: response handling 
-        return True
-    else: return False
+"""Endpoint that handles password reset given a token
+
+Parameters:
+    reset_token: JWT from url param
+
+Returns:
+    HTTP: 202 Accepted or 401 Unauthorized if token validation fails
+"""
+@router.post("/reset-password/{reset_token}", status_code=status.HTTP_202_ACCEPTED)
+def reset_password(reset_user: ResetUser, reset_token, db: Session = Depends(get_db)): 
+    try:
+        token_data = decode_jwt(reset_token, db)
+    except:
+         raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token is expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    reset_req = get_reset_token(reset_token, db)
+    if reset_req and reset_req.registrationTokenValidUntil.timestamp() > datetime.now().timestamp() and reset_req.registrationToken == reset_token: #validate token against database, even if jwt is valid
+        secret_to_change = UserSecret (
+            userId = token_data.userId,
+            password = get_hash(reset_user.password),
+            registrationToken = get_hash(create_random_secret()), #as token is already checked, token gets purged from database and replaced by a random hash
+            registrationTokenValidUntil = datetime.now() - timedelta(days=1)
+            )
+        return update_user_secret(secret_to_change, db) 
+    else: 
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token is invalid",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
