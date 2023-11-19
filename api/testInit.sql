@@ -211,13 +211,13 @@ VALUES
   (3, 5, false);
 
 -- Test data for UserSecret db table with standard password "admin"
-INSERT INTO usersecret (userid, password, registrationtoken, registrationtokenvaliduntil, passwordtoken, passwordtokenvaliduntil)
+INSERT INTO usersecret (userid, password, registrationtoken, registrationtokenvaliduntil)
 VALUES
-  (1, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token1', '2023-10-01 12:00:00', 'passwordToken1', '2023-10-10 12:00:00'),
-  (2, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token2', '2023-10-02 14:00:00', 'passwordToken2', '2023-10-11 14:00:00'),
-  (3, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token3', '2023-10-03 16:00:00', 'passwordToken3', '2023-10-12 16:00:00'),
-  (4, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token4', '2023-10-04 18:00:00', 'passwordToken4', '2023-10-13 18:00:00'),
-  (5, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token5', '2023-10-05 20:00:00', 'passwordToken5', '2023-10-14 20:00:00');
+  (1, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token1', '2023-10-01 12:00:00'),
+  (2, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token2', '2023-10-02 14:00:00'),
+  (3, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token3', '2023-10-03 16:00:00'),
+  (4, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token4', '2023-10-04 18:00:00'),
+  (5, '$2b$12$PszEt9WwCr9kpZhFt5IYNOF3rTgjStqnoWl/T78xIi.9AJW9gPhQ.', 'token5', '2023-10-05 20:00:00');
 
 -- Inserting an API key for User 1
 INSERT INTO apikey (apikey, note, createdon, validuntil, userid)

@@ -8,7 +8,5 @@ class UserSecret(Base):
     password = Column(String(255), nullable=False)
     registrationToken = Column(String(255), nullable=True)
     registrationTokenValidUntil = Column(DateTime, nullable=True)
-    passwordToken = Column(String(255), nullable=True)
-    passwordTokenValidUntil = Column(DateTime, nullable=True)
 
     user = relationship("User", backref="userSecret")
