@@ -17,8 +17,8 @@ def sendEmail(template, to, subj, fields,replyTo=None):
     templateFile = open(os.path.join(os.path.dirname(__file__),'email_templates',''+template+'.handlebars'),"r", encoding="utf-8")
     source = templateFile.read()
     template = compiler.compile(source)
-    if (os.getenv("SMTP_TESTING") == True or (os.getenv("SMTP_TESTING") is not None and os.getenv("SMTP_TESTING" != False))):
-        print(template(fields))
+    if (os.getenv("SMTP_TESTING") == True or (os.getenv("SMTP_TESTING") is not None and os.getenv("SMTP_TESTING") != False)):
+        print(to, subj, template(fields))
     else:
         performSmtpSend(to, subj,template(fields),replyTo)
 
