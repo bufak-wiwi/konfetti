@@ -75,9 +75,9 @@ def create_user(user2create: CreateUser, request: Request, db: Session = Depends
                                       registrationTokenValidUntil = valid_until)
         new_secret = create_user_secret(secret_to_create, db)
         #TODO change template for dev env on server and handle valid link
-        return sendEmail(template="sample",to=new_user.email, subj="Willkommen in Konfetti", replyTo="noreply@test.com",
+        return sendEmail(template="userRegistration",to=new_user.email, subj="Willkommen in Konfetti",
                   fields={"name":new_user.firstname,
-                          "message":f"//nThank you for using our system. Have fun. To finish the your setup, please set your password here://n{request.base_url}reset-password/{new_secret.registrationToken}"})
+                          "setPasswdUrl":f"{request.base_url}reset-password/{new_secret.registrationToken}"})
     else: 
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

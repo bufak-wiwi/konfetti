@@ -33,6 +33,8 @@ def performSmtpSend(to,subj,body,replyTo):
     message["To"] = to
     if replyTo is not None:
         message.add_header('reply-to', replyTo)
+    else:
+        message.add_header('reply-to',os.getenv("SMTP_REPLY-TO"))
     mailBody = MIMEText(body, "html")
     message.attach(mailBody)
 
