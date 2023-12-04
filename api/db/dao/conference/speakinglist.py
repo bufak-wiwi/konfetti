@@ -14,19 +14,20 @@ from db.models.conference import Conference
 from db.models.council import Council
 
 
-def get_speaking_list(db: Session = Depends(get_db)):
-    return db.query(Report).filter(Report.reportStatus == 0, Report.reportType == 1).order_by(Report.reportTime).all()
+# def get_speaking_list(db: Session = Depends(get_db)):
+#     return db.query(Report).filter(Report.reportStatus == 0, Report.reportType == 1).order_by(Report.reportTime).all()
 
-def get_speaking_list_important(db: Session = Depends(get_db)):
-    query = db.query(User.Name, User.Surname, Council.University, Report.ReportType, Report.ReportTime, User.UID, Report.ReportApplicantInfo); 
-    db.join(Report, Report.UserID == User.UID);
-    db.join(Council, User.CouncilID == Council.CouncilID);
-    db.filter(Report.ReportStatus == 0);
-    db.order_by(asc(Report.ReportTime));
+def get_speaking_list(db: Session):
+    t = db.query(User.firstname, User.lastname, Council.university, Report.reportType, Report.reportTime, User.id, Report.reportApplicationInfo).join(Report, Report.userId == User.id).join(Council, User.councilId == Council.id).filter(Report.reportStatus == 0).order_by(asc(Report.reportTime)); 
+    return db.execute(t)
+    query.join(Report, Report.userId == User.id);
+    query.join(Council, User.councilId == Council.id);
+    query.filter(Report.reportStatus == 0);
+    query.order_by(asc(Report.reportTime));
     return query 
 
-def post_entry_to_speaking_list(userId:int, reportType:int,  db: Session = Depends(get_db)):
+def post_entry_to_speaking_list(userId:int, reportType:int,  db: Session):
     pass
 
-def update_entry_in_speaking_list( userId:int, reportType:int, db: Session = Depends(get_db)):
+def update_entry_in_speaking_list( userId:int, reportType:int, db: Session):
     pass

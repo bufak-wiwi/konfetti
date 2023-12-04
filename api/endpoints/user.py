@@ -9,7 +9,7 @@ from endpoints.helper.mailing.mailing import sendEmail
 
 from db.session import get_db
 from db.dao.user import get_users, create_user_in_db, get_user, create_user_secret
-from endpoints.helper.auth.authHelper import decode_jwt, refresh_token_in_response, generate_jwt, get_hash, create_random_secret
+from endpoints.helper.auth.authHelper import refresh_token_in_response, generate_jwt, get_hash, create_random_secret
 from endpoints.auth import PermissionChecker, depend_token
 from endpoints.schemas.auth import TokenData
 from endpoints.schemas.user import ShowUser, CreateUser, UpdateUser
