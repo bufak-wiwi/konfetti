@@ -34,7 +34,6 @@ def get_all(db: Session = Depends(get_db), current_user: TokenData = Depends(dep
         all_users = get_users(db)
 
         all_showusers = [ShowUser(id=user.id, email=user.email, status=user.status) for user in all_users] #should be possible automatically
-        #TODO: currently not a working endpoint
         return refresh_token_in_response(JSONResponse(jsonable_encoder(all_showusers)), current_user)
     except Exception as ex:
         errorhandler(ex)

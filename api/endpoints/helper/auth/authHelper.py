@@ -62,7 +62,7 @@ def refresh_token(encoded_jwt: TokenData, expires_delta: timedelta | None = None
     
 def refresh_token_in_response(response, current_user):
 
-    response.set_cookie(key="access_token", value=f"{refresh_token(current_user = current_user)}", httponly=True)
+    response.set_cookie(key="access_token", value=f"{refresh_token(encoded_jwt = current_user)}", httponly=True)
 
     return response
 
