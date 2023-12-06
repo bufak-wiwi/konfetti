@@ -1,3 +1,4 @@
+import json
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status, responses
 
@@ -28,11 +29,7 @@ Returns:
 @router.get("/", dependencies=[Depends(PermissionChecker(["USER"]))],response_model=List[SpeakingListEntry])
 def get_all(conferenceId:int,db: Session = Depends(get_db),current_user: TokenData = Depends(depend_token)):
     try:
-        speaking_list = get_speaking_list(db)
-        type(speaking_list)
-        #response = responses.Response(speaking_list)
-        #print (*speaking_list, sep = "\n")
-        return refresh_token_in_response(JSONResponse(jsonable_encoder(speaking_list)), current_user)
+        return refresh_token_in_response(JSONResponse(jsonable_encoder(get_speaking_list(db))), current_user)
     except Exception as ex:
         errorhandler(ex)
     
