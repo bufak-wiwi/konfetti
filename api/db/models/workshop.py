@@ -18,5 +18,5 @@ class Workshop(Base):
     hostIsExternal = Column(Boolean, nullable=False)
     hostName = Column(String(255), nullable=False)
 
-    # Define a relationship with the workshopAttendee table
-    workshop_attendees = relationship("WorkshopAttendee", backref="workshop")
+    # # Define a relationship with the workshopAttendee table
+    # workshop_attendees = relationship("WorkshopAttendee", backref="workshop")

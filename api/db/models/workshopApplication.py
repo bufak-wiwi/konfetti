@@ -9,4 +9,4 @@ class WorkshopApplication(Base):
     isHost = Column(Boolean, nullable=False)
 
     user = relationship("User", backref="workshopApplication")
-    workshop_applicated = relationship("Workshop", backref="workshopApplication")
+    workshop = relationship("Workshop", backref="workshopApplication")

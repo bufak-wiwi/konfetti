@@ -13,6 +13,7 @@ The following entries must be present in the .env file:
 - SMTP_PORT (SSL)
 - SMTP_USERNAME
 - SMTP_PASSWORD
+- SMTP_REPLY-TO (default for all mails, you can override it for each mail with the optional parameter "replyTo")
 
 If you only want to test the mailing, you can set the `SMTP_TESTING=TRUE` entry.  
 The generated HTML will then be printed in the console.
