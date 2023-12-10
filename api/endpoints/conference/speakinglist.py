@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, responses
 
 from db.dao.user import get_users
 from db.dao.conference.conference import get_application
-from db.dao.conference.speakinglist import get_speaking_list,post_entry_to_speaking_list, update_entry_in_speaking_list
+from db.dao.conference.speakinglist import get_speaking_list,post_entry_to_speaking_list,check_if_report_exists, update_entry_in_speaking_list
 from endpoints.auth import PermissionChecker, depend_token
 from endpoints.helper.auth.authHelper import refresh_token_in_response
 from endpoints.schemas.auth import TokenData
@@ -33,37 +33,29 @@ def get_all(conferenceId:int,db: Session = Depends(get_db),current_user: TokenDa
     except Exception as ex:
         errorhandler(ex)
     
-# @router.get("/{conferenceId}/important", dependencies=[Depends(PermissionChecker(["USER"]))])
-# def get_all(conferenceId:int):
-#     try:
-#         speaking_list = get_speaking_list_important()
-#         response = responses.Response(speaking_list)
-#         return refresh_token_in_response(response)
-#     except Exception as ex:
-#         errorhandler(ex)
-    
-@router.post("/raiseHand", status_code=status.HTTP_201_CREATED,dependencies=[Depends(PermissionChecker(["USER"]))])
-def add_Report(conferenceId:int,body:SpeakingListAdd, current_user: TokenData = Depends(depend_token)):
+@router.get("/raiseHand/{reportType}", dependencies=[Depends(PermissionChecker(["USER"]))],response_model=List[SpeakingListEntry])
+def add_Report(conferenceId:int,reportType:int,db: Session = Depends(get_db), current_user: TokenData = Depends(depend_token)):
     try:
-        applicationInfo = get_application(current_user.userId,conferenceId)
-        print(applicationInfo)
-        post_entry_to_speaking_list(current_user.userId,body.reportType,applicationInfo.applicationType)
-        pass
+        if(check_if_report_exists(current_user.userId,reportType,db)):
+            return refresh_token_in_response(JSONResponse({"created":False,"error":"Entry already exists"}),current_user)
+        applicationInfo = get_application(current_user.userId,conferenceId,db)
+        reportId = post_entry_to_speaking_list(current_user.userId,reportType,applicationInfo['name'],db).id
+        print(reportId)
+        return refresh_token_in_response(JSONResponse({"created":True,"reportId":reportId}),current_user)
     except Exception as ex:
         errorhandler(ex)
 
-@router.post("/lowerHand", status_code=status.HTTP_201_CREATED,dependencies=[Depends(PermissionChecker(["USER"]))])
-def update_Report(conferenceId:int,body:SpeakingListUpdate, current_user: TokenData = Depends(depend_token)):
+@router.get("/lowerHand/{reportId}", status_code=status.HTTP_201_CREATED,dependencies=[Depends(PermissionChecker(["USER"]))])
+def update_Report(conferenceId:int,reportId:int, current_user: TokenData = Depends(depend_token),db: Session = Depends(get_db)):
     try:
-        update_entry_in_speaking_list(body.reportId, current_user.userId)
-        pass
+        return refresh_token_in_response(JSONResponse({"updated":update_entry_in_speaking_list(current_user.userId,reportId,db)}),current_user)
     except Exception as ex:
         errorhandler(ex)
 
 @router.post("/lowerHand/admin", status_code=status.HTTP_201_CREATED,dependencies=[Depends(PermissionChecker(["ADMIN"]))])
-def update_Report(conferenceId:int,body:SpeakingListUpdate):
+def update_Report(conferenceId:int,body:SpeakingListUpdate,db: Session = Depends(get_db),current_user: TokenData = Depends(depend_token)):
+    #TODO: Check with an Admin user.
     try:
-        update_entry_in_speaking_list(body.reportId, body.userId)
-        pass
+        return refresh_token_in_response(JSONResponse({"updated":update_entry_in_speaking_list(body.userId,body.reportId,db)}),current_user)
     except Exception as ex:
         errorhandler(ex)
