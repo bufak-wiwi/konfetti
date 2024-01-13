@@ -9,7 +9,7 @@ New API for conferencemanagementsystem for BuFaK
 import os
 from dotenv import load_dotenv
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 from db.session import engine 
 from db.base import Base
