@@ -2,10 +2,10 @@ name: Dev Deploy Frontend
 on:
   push:
     branches:
-        - develop
-        - 1-set-up-the-development-environmentsetu
+      - develop
+      - 1-set-up-the-development-environmentsetu
     paths:
-        - frontend/**
+      - frontend/**
 
 jobs:
   build:
@@ -30,12 +30,15 @@ jobs:
         working-directory: ./frontend
         run: |
           pnpm run lint
-      
+
       - name: Build Application
         working-directory: ./frontend
         run: |
           pnpm run build
-        
+        env:
+          # TODO: Replace with git Secret
+          VITE_BASE_URL: https://dev.api.konfetti.bufak-wiwi.org/
+
       - name: copy files via ssh password
         uses: appleboy/scp-action@master
         with:
