@@ -22,16 +22,16 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 -- Inserting an application type
-INSERT INTO applicationtype (name)
-VALUES ('Application Type A');
+INSERT INTO applicationtype (name,goIsAllowed)
+VALUES ('Application Type A',True);
 
 -- Inserting another application type
-INSERT INTO applicationtype (name)
-VALUES ('Application Type B');
+INSERT INTO applicationtype (name,goIsAllowed)
+VALUES ('Application Type B',False);
 
 -- Inserting another application type
-INSERT INTO applicationtype (name)
-VALUES ('Application Type C');
+INSERT INTO applicationtype (name,goIsAllowed)
+VALUES ('Application Type C',False);
 
 -- Inserting a conference record
 INSERT INTO conference (name, startdate, enddate, participationagreement, arrivedcouncils, conferenceapplicationphase, workshopapplicationphase, workshopsuggestionphase, texts, dropdowns)

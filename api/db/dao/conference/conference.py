@@ -12,5 +12,5 @@ from db.models.report import Report
 
 def get_application(userId: int,conferenceId:int, db: Session = Depends(get_db)):
      
-    q = db.query(ApplicationType.name,ConferenceApplication.status).join(ApplicationType,ConferenceApplication.applicationTypeId == ApplicationType.id).filter(ConferenceApplication.userId == userId, ConferenceApplication.conferenceId == conferenceId)
+    q = db.query(ApplicationType.name,ConferenceApplication.status,ConferenceApplication.isAllowedToVote,ConferenceApplication.priority,ApplicationType.goIsAllowed).join(ApplicationType,ConferenceApplication.applicationTypeId == ApplicationType.id).filter(ConferenceApplication.userId == userId, ConferenceApplication.conferenceId == conferenceId)
     return jsonable_encoder(db.execute(q).mappings().first())
