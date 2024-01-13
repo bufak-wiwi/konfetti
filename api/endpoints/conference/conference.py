@@ -22,18 +22,6 @@ router = APIRouter()
 # response.set_cookie(key="access_token", value=f"Bearer {refresh_access_token()}", httponly=True)
 
 
-"""Endpoint to get all queued speaker
-
-Returns:
-    HTTP: 202
-"""
-@router.get("/", dependencies=[Depends(PermissionChecker(["USER"]))],response_model=List[SpeakingListEntry])
-def get_all(conferenceId:int,db: Session = Depends(get_db),current_user: TokenData = Depends(depend_token)):
-    try:
-        return refresh_token_in_response(JSONResponse(jsonable_encoder(get_speaking_list(db))), current_user)
-    except Exception as ex:
-        errorhandler(ex)
-    
 @router.get("/getApplicationDetails", dependencies=[Depends(PermissionChecker(["USER"]))],response_model=List[UserDetails])
 def get_user_details(conferenceId:int,db: Session = Depends(get_db), current_user: TokenData = Depends(depend_token)):
     try:
@@ -42,18 +30,3 @@ def get_user_details(conferenceId:int,db: Session = Depends(get_db), current_use
         return refresh_token_in_response(JSONResponse(applicationInfo),current_user)
     except Exception as ex:
         errorhandler(ex)
-
-# @router.get("/lowerHand/{reportId}", status_code=status.HTTP_201_CREATED,dependencies=[Depends(PermissionChecker(["USER"]))])
-# def update_Report(conferenceId:int,reportId:int, current_user: TokenData = Depends(depend_token),db: Session = Depends(get_db)):
-#     try:
-#         return refresh_token_in_response(JSONResponse({"updated":update_entry_in_speaking_list(current_user.userId,reportId,db)}),current_user)
-#     except Exception as ex:
-#         errorhandler(ex)
-
-# @router.post("/lowerHand/admin", status_code=status.HTTP_201_CREATED,dependencies=[Depends(PermissionChecker(["ADMIN"]))])
-# def update_Report(conferenceId:int,body:SpeakingListUpdate,db: Session = Depends(get_db),current_user: TokenData = Depends(depend_token)):
-#     #TODO: Check with an Admin user.
-#     try:
-#         return refresh_token_in_response(JSONResponse({"updated":update_entry_in_speaking_list(body.userId,body.reportId,db)}),current_user)
-#     except Exception as ex:
-#         errorhandler(ex)
