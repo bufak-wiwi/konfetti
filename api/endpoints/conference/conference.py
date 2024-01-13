@@ -34,7 +34,7 @@ def get_all(conferenceId:int,db: Session = Depends(get_db),current_user: TokenDa
     except Exception as ex:
         errorhandler(ex)
     
-@router.get("/get-user-details", dependencies=[Depends(PermissionChecker(["USER"]))],response_model=List[UserDetails])
+@router.get("/getApplicationDetails", dependencies=[Depends(PermissionChecker(["USER"]))],response_model=List[UserDetails])
 def get_user_details(conferenceId:int,db: Session = Depends(get_db), current_user: TokenData = Depends(depend_token)):
     try:
         applicationInfo = get_application(current_user.userId,conferenceId,db)
