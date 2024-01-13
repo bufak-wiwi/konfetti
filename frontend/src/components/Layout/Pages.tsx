@@ -4,12 +4,12 @@ import { Box, useTheme } from '@mui/material'
 import { useAtom } from 'jotai'
 import { ejectInterceptors, setupInterceptors } from '@/api'
 import { sidebarWidth } from '@/config'
-import { Route as RouteItem, adminRoutes, authenticatedRoutes, publicRoutes } from '@/config/routes'
+import { Route as RouteItem, adminRoutes, authenticatedRoutes, publicRoutes, conferenceRoutes } from '@/config/routes'
 import { useNotifications } from '@/features/Feedback'
 import useWindow from '@/hooks/useWindow'
 import { confettiAtom, sidebarAtom } from '@/utils/atoms'
 import ErrorBoundary from './ErrorBoundary'
-import { RequireAdmin, RequireAuth } from './RouteGards'
+import { RequireAdmin, RequireAuth, RequireConference } from './RouteGards'
 import Confetti from 'react-confetti'
 
 export default function Pages() {
@@ -47,6 +47,15 @@ export default function Pages() {
                 <Routes>
                     {renderRoutes(publicRoutes)}
                     <Route element={<RequireAuth />}>{renderRoutes(authenticatedRoutes)}</Route>
+                    <Route
+                        element={
+                            <RequireAuth>
+                                <RequireConference />
+                            </RequireAuth>
+                        }
+                    >
+                        {renderRoutes(conferenceRoutes)}
+                    </Route>
                     <Route element={<RequireAdmin />}>{renderRoutes(adminRoutes)}</Route>
                 </Routes>
             </ErrorBoundary>

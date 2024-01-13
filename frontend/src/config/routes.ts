@@ -1,5 +1,5 @@
 import asyncComponentLoader from '@/utils/loader'
-import { SvgIconComponent } from '@mui/icons-material'
+import { BackHand, SvgIconComponent } from '@mui/icons-material'
 import HomeIcon from '@mui/icons-material/Home'
 import { FC } from 'react'
 import { PathRouteProps } from 'react-router-dom'
@@ -11,7 +11,10 @@ export interface RouteItem extends PathRouteProps {
 }
 export interface NavItem extends RouteItem {
     Icon: SvgIconComponent
-    exact?: boolean
+    /**
+     * Whether the whole url should be matched when highlighting the icon.
+     */
+    end?: boolean
 }
 
 export type Route = RouteItem | NavItem
@@ -22,7 +25,7 @@ export const authenticatedRoutes: Route[] = [
     {
         component: asyncComponentLoader(() => import('@/pages/Dashboard')),
         path: '/',
-        exact: true,
+        end: true,
         title: 'Startseite',
         Icon: HomeIcon,
     },
@@ -30,7 +33,17 @@ export const authenticatedRoutes: Route[] = [
         component: asyncComponentLoader(() => import('@/pages/UserDetails')),
         path: '/user/:id',
         title: 'Profil',
-      },
+    },
+]
+
+export const conferenceRoutes: Route[] = [
+    {
+        component: asyncComponentLoader(() => import('@/pages/conference/SpeakingList')),
+        path: '/conference/:conferenceId/redeliste',
+        Icon: BackHand,
+        end: true,
+        title: 'Redeliste',
+    },
 ]
 
 export const publicRoutes: Route[] = [
@@ -65,10 +78,11 @@ export const publicRoutes: Route[] = [
         title: 'Not Found',
     },
 ]
-export const routes = [...adminRoutes, ...authenticatedRoutes, ...publicRoutes]
+export const routes = [...adminRoutes, ...authenticatedRoutes, ...conferenceRoutes, ...publicRoutes]
 
 const isNavItem = (route: Route): route is NavItem => 'Icon' in route
 
 export const adminNavItems = adminRoutes.filter(isNavItem)
 export const authenticatedNavItems = authenticatedRoutes.filter(isNavItem)
+export const conferenceNavItems = conferenceRoutes.filter(isNavItem)
 export const publicNavItems = publicRoutes.filter(isNavItem)
