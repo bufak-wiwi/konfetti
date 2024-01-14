@@ -11,7 +11,7 @@ from db.dao.votingAnswer import (
     delete_voting_answer,
 )
 from db.models.votingAnswer import VotingAnswer
-from api.endpoints.schemas.votingAnswer import (
+from endpoints.schemas.votingAnswer import (
     CreateVotingAnswer,
     UpdateVotingAnswer,
     ShowVotingAnswer,

@@ -11,7 +11,7 @@ from db.dao.votingQuestion import (
     delete_voting_question,
     get_voting_questions_by_conference,
 )
-from api.endpoints.schemas.votingQuestion import CreateVotingQuestion, UpdateVotingQuestion, ShowVotingQuestion
+from endpoints.schemas.votingQuestion import CreateVotingQuestion, UpdateVotingQuestion, ShowVotingQuestion
 
 router = APIRouter()
 
