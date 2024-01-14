@@ -9,7 +9,7 @@ class VotingQuestion(Base):
     questionText = Column(String(255), nullable=False)
     arrivedCouncilCount = Column(Integer, nullable=False)
     isOpen = Column(Boolean, nullable=False)
-    issecret = Column(Boolean, nullable=False)
+    isSecret = Column(Boolean, nullable=False)
     resolvedOn = Column(DateTime, nullable=False)
     votingOptions = Column(JSON, nullable=False)
     votes = Column(JSON, nullable=False)
