@@ -12,5 +12,5 @@ api_router = APIRouter()
 api_router.include_router(auth.router, prefix="", tags=["auth"])
 api_router.include_router(user.router, prefix="/users", tags=["users"])
 #api_router.include_router(conferences.router, prefix="/conference/", tags=["conferences"])
-api_router.include_router(conference.router, prefix="/conference/{conferenceId}", tags=["conference"])
+api_router.include_router(conference.router, prefix="", tags=["conference"]) #changed prefic from /conference/{id} because of different handling in endpoint
 api_router.include_router(speakinglist.router, prefix="/conference/{conferenceId}/speakinglist", tags=["speakinglist"])

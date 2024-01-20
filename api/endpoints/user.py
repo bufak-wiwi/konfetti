@@ -8,7 +8,7 @@ from endpoints.helper.mailing.mailing import sendEmail
 
 
 from db.session import get_db
-from db.dao.user import get_users, create_user_in_db, get_user, create_user_secret
+from db.dao.user import get_users, create_user_in_db, get_user, create_user_secret, update_role_in_db, get_users_with_roles
 from endpoints.helper.auth.authHelper import refresh_token_in_response, generate_jwt, get_hash, create_random_secret
 from endpoints.auth import PermissionChecker, depend_token
 from endpoints.schemas.auth import TokenData
@@ -93,7 +93,17 @@ Parameters:
 Returns:
     HTTP: 
 """
-@router.put("/{id}", dependencies=[Depends(PermissionChecker(["USER"]))])
-def update_user(user2update: UpdateUser, id: int, db: Session = Depends(get_db), current_user: TokenData = Depends(depend_token
-)):
+@router.put("/{userId}", dependencies=[Depends(PermissionChecker(["USER" or "ADMIN"]))])
+def update_user(user2update: UpdateUser, userId: int, db: Session = Depends(get_db), current_user: TokenData = Depends(depend_token)):
+    pass
+
+#TODO: object handling from frontend
+@router.put("/{userId}/role", dependencies=[Depends(PermissionChecker(["ADMIN"]))])
+def update_user_role(userId: int, roledId: int, councilId: int, db: Session = Depends(get_db)):
+    pass
+
+#TODO: Admin permission doesnt work yet, 
+#TODO: scheme
+@router.get("/", dependencies=[Depends(PermissionChecker(["USER"]))]) 
+def get_all_with_roles(db: Session = Depends(get_db), current_user: TokenData = Depends(depend_token)):
     pass

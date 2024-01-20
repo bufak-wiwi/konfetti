@@ -103,7 +103,7 @@ Returns:
 """
 def create_user_in_db(user_to_create, db: Session):
     if not db.query(User).filter(User.email == user_to_create.email).first():  
-        new_user = User (
+        newUser = User (
             email=user_to_create.email,
             firstname = user_to_create.firstname,
             lastname = user_to_create.lastname,
@@ -111,9 +111,9 @@ def create_user_in_db(user_to_create, db: Session):
             birthday = user_to_create.birthday,
             status = "Inactive"
         )
-        db.add(new_user)
+        db.add(newUser)
         db.commit()
-        return new_user
+        return newUser
     else: return False
 
 
@@ -126,15 +126,15 @@ Returns:
     New UserSecret object
 """
 def create_user_secret(secret_to_create, db: Session):
-    new_user_secret =  UserSecret (
+    newUserSecret =  UserSecret (
         userId = secret_to_create.userId,
         password = secret_to_create.password,
         registrationToken = secret_to_create.registrationToken,
         registrationTokenValidUntil = secret_to_create.registrationTokenValidUntil
         )
-    db.add(new_user_secret)
+    db.add(newUserSecret)
     db.commit()
-    return new_user_secret
+    return newUserSecret
 
 """Databaseaccessobject to update an existing user secret in db
 
@@ -147,13 +147,13 @@ Returns:
     None
 """
 def update_user_secret(update_secret, db: Session):
-    user_secret_to_update = db.query(UserSecret).filter(UserSecret.userId == update_secret.userId).first()
-    user_secret_to_update.password = update_secret.password
-    user_secret_to_update.registrationToken = update_secret.registrationToken
-    user_secret_to_update.registrationTokenValidUntil = update_secret.registrationTokenValidUntil
+    userSecretUpdate = db.query(UserSecret).filter(UserSecret.userId == update_secret.userId).first()
+    userSecretUpdate.password = update_secret.password
+    userSecretUpdate.registrationToken = update_secret.registrationToken
+    userSecretUpdate.registrationTokenValidUntil = update_secret.registrationTokenValidUntil
 
-    user_to_update = db.query(User).filter(User.id == update_secret.userId).first()
-    user_to_update.status = "Active"
+    userUpdate = db.query(User).filter(User.id == update_secret.userId).first()
+    userUpdate.status = "Active"
 
     db.commit()
     return
@@ -179,11 +179,11 @@ Returns:
     UserSecret object
 """
 def update_token(secret_to_change, db:Session):
-    update_secret_token = db.query(UserSecret).filter(UserSecret.userId == secret_to_change.userId).first()
-    update_secret_token.registrationToken = secret_to_change.registrationToken
-    update_secret_token.registrationTokenValidUntil = secret_to_change.registrationTokenValidUntil
+    updateSecretToken = db.query(UserSecret).filter(UserSecret.userId == secret_to_change.userId).first()
+    updateSecretToken.registrationToken = secret_to_change.registrationToken
+    updateSecretToken.registrationTokenValidUntil = secret_to_change.registrationTokenValidUntil
     db.commit()
-    return update_secret_token
+    return updateSecretToken
 
 """"Databaseaccessobject to get an existing user secret registration token by token
 
@@ -195,3 +195,10 @@ Returns:
 """
 def get_reset_token(token, db: Session):
     return db.query(UserSecret).filter(UserSecret.registrationToken == token).first()
+
+def update_role_in_db(userId, roleId, conferenceId, db):
+    #TODO: DAO
+    pass
+
+def get_users_with_roles(db: Session):
+    pass

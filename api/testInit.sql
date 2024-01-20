@@ -23,15 +23,10 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 -- Inserting an application type
 INSERT INTO applicationtype (name,goIsAllowed)
-VALUES ('Application Type A',True);
-
--- Inserting another application type
-INSERT INTO applicationtype (name,goIsAllowed)
-VALUES ('Application Type B',False);
-
--- Inserting another application type
-INSERT INTO applicationtype (name,goIsAllowed)
-VALUES ('Application Type C',False);
+VALUES 
+  ('Application Type A',True),
+  ('Application Type B',False),
+  ('Application Type C',False);
 
 -- Inserting a conference record
 INSERT INTO conference (name, startdate, enddate, participationagreement, arrivedcouncils, conferenceapplicationphase, workshopapplicationphase, workshopsuggestionphase, texts, dropdowns)
@@ -80,54 +75,24 @@ VALUES (
 
 -- Inserting a council record for a German university
 INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - University of Munich', 80333, 'Munich', 'University of Munich', 'Geschwister-Scholl-Platz 1', 0);
+VALUES ('Student council - University of Munich', 80333, 'Munich', 'University of Munich', 'Geschwister-Scholl-Platz 1', 0),
+  ('Student council - Technical University of Munich', 80333, 'Munich', 'Technical University of Munich', 'Arcisstraße 21', 0),
+  ('Student council - Ludwig Maximilian University of Munich', 80539, 'Munich', 'Ludwig Maximilian University of Munich', 'Geschwister-Scholl-Platz 1', 0),
+  ('Student council - Humboldt University of Berlin', 10115, 'Berlin', 'Humboldt University of Berlin', 'Unter den Linden 6', 0),
+  ('Student council - Technical University of Berlin', 10623, 'Berlin', 'Technical University of Berlin', 'Straße des 17. Juni 135', 0),
+  ('Student council - University of Hamburg', 20146, 'Hamburg', 'University of Hamburg', 'Edmund-Siemers-Allee 1', 0),
+  ('Student council - University of Cologne', 50923, 'Cologne', 'University of Cologne', 'Albertus-Magnus-Platz', 0),
+  ('Student council - Goethe University Frankfurt', 60323, 'Frankfurt', 'Goethe University Frankfurt', 'Theodor-W.-Adorno-Platz 1', 0),
+  ('Student council - University of Stuttgart', 70174, 'Stuttgart', 'University of Stuttgart', 'Keplerstraße 7', 0),
+  ('Student council - University of Heidelberg', 69117, 'Heidelberg', 'University of Heidelberg', 'Grabengasse 1', 0);
 
--- Inserting a council record for a German university
-INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - Technical University of Munich', 80333, 'Munich', 'Technical University of Munich', 'Arcisstraße 21', 0);
-
--- Inserting a council record for a German university
-INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - Ludwig Maximilian University of Munich', 80539, 'Munich', 'Ludwig Maximilian University of Munich', 'Geschwister-Scholl-Platz 1', 0);
-
--- Inserting a council record for a German university
-INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - Humboldt University of Berlin', 10115, 'Berlin', 'Humboldt University of Berlin', 'Unter den Linden 6', 0);
-
--- Inserting a council record for a German university
-INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - Technical University of Berlin', 10623, 'Berlin', 'Technical University of Berlin', 'Straße des 17. Juni 135', 0);
-
--- Inserting a council record for a German university
-INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - University of Hamburg', 20146, 'Hamburg', 'University of Hamburg', 'Edmund-Siemers-Allee 1', 0);
-
--- Inserting a council record for a German university
-INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - University of Cologne', 50923, 'Cologne', 'University of Cologne', 'Albertus-Magnus-Platz', 0);
-
--- Inserting a council record for a German university
-INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - Goethe University Frankfurt', 60323, 'Frankfurt', 'Goethe University Frankfurt', 'Theodor-W.-Adorno-Platz 1', 0);
-
--- Inserting a council record for a German university
-INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - University of Stuttgart', 70174, 'Stuttgart', 'University of Stuttgart', 'Keplerstraße 7', 0);
-
--- Inserting a council record for a German university
-INSERT INTO council (name, zip, city, university, street, isblocked)
-VALUES ('Student council - University of Heidelberg', 69117, 'Heidelberg', 'University of Heidelberg', 'Grabengasse 1', 0);
--- Inserting a user role
-INSERT INTO role (name) VALUES ('User');
-
--- Inserting an admin role
-INSERT INTO role (name) VALUES ('Admin');
-
--- Inserting a council role
-INSERT INTO role (name) VALUES ('Council');
-
--- Inserting a host role
-INSERT INTO role (name) VALUES ('Host');
+-- Inserting a roles
+INSERT INTO role (name)
+VALUES
+  ('User'),
+  ('Admin'),
+  ('Council'),
+  ('Host');
 
 -- Test data for the Sensible db table
 INSERT INTO sensible (sex, street, zip, city, comment, sleepingpreference, eatingpreference, intolerances, phone, conferencecount, accomodation)
@@ -154,7 +119,8 @@ VALUES
   (2, 2, 2),
   (3, 3, 1),
   (4, 1, 3),
-  (5, 2, 1);
+  (5, 2, 1),
+  (1, 4, 2);
 
 -- Test data for VotingQuestion db table
 INSERT INTO votingquestion (conferenceid, type, questiontext, arrivedcouncilcount, isopen, issecret, resolvedon, votingoptions, votes, result)
@@ -241,92 +207,35 @@ VALUES ('emptynote', '', '2023-09-27', '2025-11-30', 2);
 
 -- Inserting an application code for conference 1, council 1, application type 1
 INSERT INTO applicationcode (conferenceid, councilid, priority, code, isused, applicationtypeid)
-VALUES (1, 1, 1, 'ABC123', 0, 1);
-
--- Inserting an application code for conference 2, council 2, application type 2
-INSERT INTO applicationcode (conferenceid, councilid, priority, code, isused, applicationtypeid)
-VALUES (2, 2, 2, 'XYZ456', 1, 2);
-
--- Inserting an application code for conference 1, council 2, application type 1
-INSERT INTO applicationcode (conferenceid, councilid, priority, code, isused, applicationtypeid)
-VALUES (1, 2, 3, 'DEF789', 0, 1);
-
--- Inserting an application code for conference 3, council 3, application type 3
-INSERT INTO applicationcode (conferenceid, councilid, priority, code, isused, applicationtypeid)
-VALUES (3, 3, 1, 'GHI456', 1, 3);
-
--- Inserting an application code for conference 2, council 1, application type 2
-INSERT INTO applicationcode (conferenceid, councilid, priority, code, isused, applicationtypeid)
-VALUES (2, 1, 2, 'JKL789', 0, 2);
-
--- Inserting an application code for conference 3, council 1, application type 1
-INSERT INTO applicationcode (conferenceid, councilid, priority, code, isused, applicationtypeid)
-VALUES (3, 1, 1, 'MNO123', 0, 1);
-
--- Inserting an application code for conference 2, council 3, application type 2
-INSERT INTO applicationcode (conferenceid, councilid, priority, code, isused, applicationtypeid)
-VALUES (2, 3, 2, 'PQR456', 1, 2);
-
--- Inserting an application code for conference 1, council 3, application type 3
-INSERT INTO applicationcode (conferenceid, councilid, priority, code, isused, applicationtypeid)
-VALUES (1, 3, 3, 'STU789', 0, 3);
+VALUES 
+  (1, 1, 1, 'ABC123', 0, 1),
+  (2, 2, 2, 'XYZ456', 1, 2),
+  (1, 2, 3, 'DEF789', 0, 1),
+  (2, 1, 2, 'JKL789', 0, 2),
+  (3, 3, 1, 'GHI456', 1, 3),
+  (3, 1, 1, 'MNO123', 0, 1),
+  (2, 3, 2, 'PQR456', 1, 2),
+  (1, 3, 3, 'STU789', 0, 3);
 
 -- Inserting a report for a user
 INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (1, 1, 1, '2023-10-05 08:45:00', 'report for application XYZ');
-
--- Inserting a report for a user
-INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (2, 2, 2, '2023-10-10 14:30:00', 'report for application ABC');
-
--- Inserting a report for a user
-INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (3, 1, 1, '2023-10-15 16:45:00', 'report for application DEF');
-
--- Inserting a report for a user
-INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (4, 3, 1, '2023-10-20 10:15:00', 'report for application GHI');
-
--- Inserting a report for a user
-INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (5, 2, 2, '2023-11-05 09:00:00', 'report for application JKL');
-
--- Inserting a report for a user
-INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (1, 1, 1, '2023-11-10 12:15:00', 'report for application MNO');
-
--- Inserting a report for a user
-INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (2, 2, 1, '2023-11-15 15:30:00', 'report for application PQR');
-
--- Inserting a report for a user
-INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (3, 1, 2, '2023-11-20 11:45:00', 'report for application STU');
-
--- Inserting a report for a user
-INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (4, 3, 1, '2023-12-05 09:30:00', 'report for application VWX');
-
--- Inserting a report for a user
-INSERT INTO report (userid, reporttype, reportstatus, reporttime, reportapplicationinfo)
-VALUES (5, 2, 1, '2023-12-10 13:00:00', 'report for application YZA');
+VALUES 
+  (1, 1, 1, '2023-10-05 08:45:00', 'report for application XYZ'),
+  (2, 2, 2, '2023-10-10 14:30:00', 'report for application ABC'),
+  (3, 1, 1, '2023-10-15 16:45:00', 'report for application DEF'),
+  (4, 3, 1, '2023-10-20 10:15:00', 'report for application GHI'),
+  (5, 2, 2, '2023-11-05 09:00:00', 'report for application JKL'),
+  (1, 1, 1, '2023-11-10 12:15:00', 'report for application MNO'),
+  (2, 2, 1, '2023-11-15 15:30:00', 'report for application PQR'),
+  (3, 1, 2, '2023-11-20 11:45:00', 'report for application STU'),
+  (4, 3, 1, '2023-12-05 09:30:00', 'report for application VWX'),
+  (5, 2, 1, '2023-12-10 13:00:00', 'report for application YZA');
 
 -- Inserting a conference application record
 INSERT INTO conferenceapplication (userid, conferenceid, timestamp, priority, sensibleid, councilid, status, isallowedtovote, applicationtypeid)
-VALUES (1, 1, '2023-10-05 10:00:00', 1, NULL, 1, 'Pending', 1, 1);
-
--- Inserting another conference application record
-INSERT INTO conferenceapplication (userid, conferenceid, timestamp, priority, sensibleid, councilid, status, isallowedtovote, applicationtypeid)
-VALUES (2, 2, '2023-10-15 14:30:00', 2, 1, 2, 'Approved', 0, 2);
-
--- Inserting another conference application record
-INSERT INTO conferenceapplication (userid, conferenceid, timestamp, priority, sensibleid, councilid, status, isallowedtovote, applicationtypeid)
-VALUES (3, 1, '2023-10-20 16:45:00', 3, NULL, 3, 'Pending', 1, 1);
-
--- Inserting another conference application record
-INSERT INTO conferenceapplication (userid, conferenceid, timestamp, priority, sensibleid, councilid, status, isallowedtovote, applicationtypeid)
-VALUES (4, 2, '2023-10-25 09:30:00', 4, 2, 2, 'Rejected', 1, 3);
-
--- Inserting another conference application record
-INSERT INTO conferenceapplication (userid, conferenceid, timestamp, priority, sensibleid, councilid, status, isallowedtovote, applicationtypeid)
-VALUES (5, 3, '2023-11-05 12:15:00', 1, NULL, 1, 'Approved', 0, 2);
+VALUES
+  (1, 1, '2023-10-05 10:00:00', 1, NULL, 1, 'Pending', 1, 1),
+  (2, 2, '2023-10-15 14:30:00', 2, 1, 2, 'Approved', 0, 2),
+  (3, 1, '2023-10-20 16:45:00', 3, NULL, 3, 'Pending', 1, 1),
+  (4, 2, '2023-10-25 09:30:00', 4, 2, 2, 'Rejected', 1, 3),
+  (5, 3, '2023-11-05 12:15:00', 1, NULL, 1, 'Approved', 0, 2);
