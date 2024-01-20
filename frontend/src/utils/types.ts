@@ -77,3 +77,12 @@ export interface LocationState {
         pathname: string
     }
 }
+
+export type SpeakingEntry = {
+    name: string
+    surname: string
+    council: string
+    reportType: number
+    reportTime: string
+    reportApplicantInfo: string
+}
