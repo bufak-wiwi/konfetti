@@ -35,7 +35,7 @@ const AppBar = styled(MuiAppBar, {
 
 export default function Header() {
     const [open, setOpen] = useAtom(sidebarAtom)
-    const route = useCurrentRoute()
+    const { route } = useCurrentRoute()
     const { user } = useAuthentication()
 
     return (

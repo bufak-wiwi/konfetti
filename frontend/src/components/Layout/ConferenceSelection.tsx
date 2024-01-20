@@ -1,18 +1,21 @@
 import { useConferenceList } from '@/api'
 import { SelectInput } from '@/features/Input'
+import { useCurrentRoute } from '@/hooks/useCurrentRoute'
 import { conferenceIdAtom } from '@/utils/atoms'
 import { useAtom } from 'jotai'
-import { useNavigate } from 'react-router-dom'
+import { generatePath, useNavigate } from 'react-router-dom'
 
 export default function ConferenceSelection() {
     const navigate = useNavigate()
+    const { route, params } = useCurrentRoute()
 
     const { data } = useConferenceList()
     const [conferenceId, setConferenceId] = useAtom(conferenceIdAtom)
 
+    // update the conference id and replace the current conferenceId param if given
     const onConferenceChange = (id: number) => {
         setConferenceId(id)
-        navigate('/')
+        navigate(generatePath(route.path, { ...params, conferenceId: id }))
     }
 
     if (!data) return null

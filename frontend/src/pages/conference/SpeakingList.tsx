@@ -1,12 +1,15 @@
+import { LoadingOverlay } from '@/features/Feedback'
+import { useCurrentConference } from '@/hooks/useCurrentConference'
 import Typography from '@mui/material/Typography'
-import { useParams } from 'react-router-dom'
 
 export default function SpeakingList() {
-    const params = useParams()
-    const conferenceId = params.conferenceId
+    const { conference, isLoading } = useCurrentConference()
+
+    if (isLoading) return <LoadingOverlay loading />
+
     return (
         <>
-            <Typography variant="h3">Redeliste für ID: {conferenceId}</Typography>
+            <Typography variant="h3">Redeliste für ID: {conference?.name}</Typography>
         </>
     )
 }
