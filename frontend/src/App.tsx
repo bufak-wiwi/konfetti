@@ -9,22 +9,25 @@ import AppErrorBoundaryFallback from '@/error-handling/fallbacks/App'
 import Pages from './components/Layout/Pages'
 import { ConfirmDialog } from './features/Feedback'
 import { useCustomTheme } from './hooks/useCustomTheme'
+import { useCurrentConference } from './hooks/useCurrentConference'
 
 function App() {
-  const theme = useCustomTheme()
+    const theme = useCustomTheme()
+    // initally load the conference list and set conferenceId to the latest
+    useCurrentConference()
 
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline enableColorScheme />
-      <Notifications />
-      <ConfirmDialog />
-      <BrowserRouter>
-        <Header />
-        <Sidebar />
-        <Pages />
-      </BrowserRouter>
-    </ThemeProvider>
-  )
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline enableColorScheme />
+            <Notifications />
+            <ConfirmDialog />
+            <BrowserRouter>
+                <Header />
+                <Sidebar />
+                <Pages />
+            </BrowserRouter>
+        </ThemeProvider>
+    )
 }
 
 export default withErrorHandler(App, AppErrorBoundaryFallback)
